@@ -1,0 +1,6 @@
+*.dll
+*.pdb
+*.log
+GTASAChaosModeMOD/Debug/
+Debug/
+*.sdf
