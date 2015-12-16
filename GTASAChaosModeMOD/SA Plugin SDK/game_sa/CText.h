@@ -1,7 +1,7 @@
 #pragma once
 #include <stdio.h>
 
-#include "plugin\plugin.h"
+#include <plugin/plugin.h>
 
 #pragma pack(push, 1)
 struct PLUGIN_API CText__TDat
@@ -92,7 +92,7 @@ public:
 	~CText();
 
 	// Returns text pointer by GXT key
-	const char *__thiscall Get(const char *key);
+	char *__thiscall Get(char *key);
 
 	// Reads MPACK tag
 	static void __stdcall readTag(char *buf, FILE *file, int *pFileOffset, bool dontRead);
@@ -114,4 +114,4 @@ public:
 };
 #pragma pack(pop)
 
-static CText& TheText = *(CText*)0xC1B340;
+extern PLUGIN_API CText& TheText;

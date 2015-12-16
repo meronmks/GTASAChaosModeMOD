@@ -1,4 +1,6 @@
-#include "plugin\plugin.h"
+#pragma once
+
+#include <plugin/plugin.h>
 
 class PLUGIN_API CGame
 {

@@ -1,14 +1,19 @@
 #pragma once
 
+#include <plugin/plugin.h>
 #include "CVector.h"
 
-#pragma pack(push, 1)
+#pragma pack(push, 4)
 class PLUGIN_API CBox
 {
 public:
-	CVector sup;
-	CVector inf;
+	CVector m_vSup;
+	CVector m_vInf;
 
-	void Set(CVector  const& _sup, CVector  const& _inf);
+	void Set(CVector  const& sup, CVector  const& inf);
+	// updates box corners, like (if left>right then swap(left, right))
+	void Recalc();
 };
 #pragma pack(pop)
+
+VALIDATE_SIZE(CBox, 0x18);

@@ -1,10 +1,10 @@
 #pragma once
 
-#include "plugin\plugin.h"
-#include "RenderWare.h"
+#include <plugin/plugin.h>
 #include "CRect.h"
 #include "CRGBA.h"
 #include "CVector2D.h"
+#include "RenderWareTypes.h"
 
 #define NUM_SPRITE_VERTICES 8
 
@@ -12,14 +12,14 @@ class PLUGIN_API CSprite2d
 {
 public:
 	// class variables
-	RwTexture *m_pTexture;
+	struct RwTexture *m_pTexture;
 	// static variables
 	static unsigned __int32& nextBufferIndex;
 	static unsigned __int32& nextBufferVertex;
 	static float& NearScreenZ;
 	static float& RecipNearClip;
 	// count: 8
-	static RwD3D9Vertex *maVertices;
+	static struct RwD3D9Vertex *maVertices;
 	// class functions
 	CSprite2d();
 	~CSprite2d();
@@ -74,7 +74,8 @@ public:
 	// non-textured polygon
 	static void Draw2DPolygon(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, CRGBA  const& color);
 	// draws progress line. Progress is a value in ranges 0 - 100.
-	static void DrawProgressBar(float x, float y, float width, float height, float progress, bool drawColoredBorder, bool drawPercentage, bool drawBlackBorder, CRGBA color, CRGBA coloredBorderColor);
+	static void DrawBarChart(float x, float y, unsigned short width, unsigned char height, float progress, signed char progressAdd, 
+		unsigned char drawPercentage, unsigned char drawBlackBorder, CRGBA color, CRGBA addColor);
 };
 
 VALIDATE_SIZE(CSprite2d, 4);

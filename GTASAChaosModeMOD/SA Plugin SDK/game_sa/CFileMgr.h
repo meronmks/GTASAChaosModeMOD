@@ -1,9 +1,7 @@
 #pragma once
-#include "plugin\plugin.h"
-#include <iostream>
+#include <plugin/plugin.h>
 
 #define FILESTREAM int
-#define FILEINT(f) ((FILE *)f)
 
 #define DIRNAMELENGTH 128
 

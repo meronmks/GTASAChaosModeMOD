@@ -9,8 +9,9 @@ DWORD WINAPI ScriptMain(void *parameter)
 {
 	while (isGameRunning)
 	{
-		actors.GetActor();
-		actors.CheckDefinedActor();
+		//actors.GetActor();
+		//actors.CheckDefinedActor();
+		actors.ActorArmament();
 	}
 	ExitThread(0);	//スレッド終了通知
 }

@@ -1,6 +1,6 @@
 #include "Actor.h"
+#include "SA Plugin SDK/game_sa/CPools.h"
 #include <random>
-#include "SA Plugin SDK/plugin/plugin.h"
 
 Actor::Actor()
 {
@@ -13,9 +13,9 @@ Actor::~Actor()
 
 void Actor::GetActor()
 {
-	DWORD actorPointer = *((DWORD *)0xB74490);
+	auto actorPointer = *((CPed **)0xB74490);
+	if (actorPointer == 0)return;
 	actorPointer += 0x4;
-	actorPointer = *((DWORD *)actorPointer);
 	for (DWORD i = 0; i < 35584; i += 0x100)
 	{
 		DWORD actor = *((DWORD *)actorPointer);	//市民取得
@@ -33,34 +33,33 @@ void Actor::GetActor()
 
 void Actor::CheckDefinedActor()
 {
-	std::list<DWORD>::iterator iterator = ActorArray.begin(); // イテレータ
+	auto iterator = ActorArray.begin(); // イテレータ
 	while (iterator != ActorArray.end())
 	{
 		if (*iterator > 0)
 		{
-			ActorArray.remove(*iterator);	//削除
+			ActorArray.erase(iterator);	//削除
 			iterator = ActorArray.begin(); // イテレータの更新
 		}
 		++iterator;  // イテレータを１つ進める
 	}
 }
 
-void Actor::GiveWeapon()
-{
-	
-}
 
 void Actor::ActorArmament()
 {
-	std::list<DWORD>::iterator iterator = ActorArray.begin(); // イテレータ
 	//乱数生成準備
 	std::random_device rnd;
 	std::mt19937 mt(rnd());
 	std::uniform_int_distribution<> rand100(0, 100);
-	while (iterator != ActorArray.end())
+	if (CPools::ms_pPedPool == NULL) return;
+	auto pedCount = CPools::ms_pPedPool->m_Size;
+	for (int i = 0; i < pedCount; i++)
 	{
 		if (30 <= rand100(mt)) continue;
-		GiveWeapon();
-		++iterator;  // イテレータを１つ進める
+		auto ped = CPools::ms_pPedPool->GetAt(i);
+		if (ped == NULL || ped->IsPlayer()) return;
+		ped->GiveWeapon(WEAPON_RLAUNCHER, 9999, true);
+		//ToDo::市民に武器をもたせる方法を調べる
 	}
 }

@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="ソース ファイル\Plugin">
+      <UniqueIdentifier>{3946d83f-b3cb-4f97-8409-ebe4c64d7605}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DLLMain.cpp">
@@ -23,6 +26,273 @@
     </ClCompile>
     <ClCompile Include="Actor.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CAEAudioEntity.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CAERadioTrackManager.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CAESound.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CAtomicModelInfo.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CBaseModelInfo.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CBox.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CBuilding.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CBulletTraces.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CCamera.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CCivilianPed.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CClock.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CClumpModelInfo.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CColBox.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CColLine.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CColSphere.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CColTriangle.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CColTrianglePlane.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CCopPed.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CCoronas.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CDarkel.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CDummy.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CEmergencyPed.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CEntity.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CFileMgr.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CFont.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CGame.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CGarages.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CGeneral.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\cHandlingDataMgr.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CHud.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CHudColours.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CMatrix.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CMatrixLink.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CMenuManager.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CMessages.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CMissionCleanup.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CModelInfo.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\common.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CompressedVector.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CPad.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CPed.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CPedIntelligence.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CPhysical.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CPlaceable.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CPlaneTrail.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CPlaneTrails.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CPointLights.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CPools.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CQuaternion.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CRadar.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CRealTimeShadow.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CRect.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CReference.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CReferences.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CRegisteredCorona.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CRGBA.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CRunningScript.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CScene.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CShadowCamera.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CShadows.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CSimpleTransform.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CSphere.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CSprite.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CSprite2d.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CStats.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CTask.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CTaskComplex.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CTaskComplexKillPedOnFoot.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CTaskSimple.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CTexDictionary.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CText.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CTheScripts.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CTheZones.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CTimeCycleInfo.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CTimeModelInfo.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CTimer.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\cTransmission.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CTxdStore.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CUserDisplay.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CVector.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CVector2D.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CVehicle.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CVisibilityPlugins.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CWeapon.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CWeaponInfo.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CWeaponModelInfo.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CWorld.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CZone.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="SA Plugin SDK\game_sa\CColPoint.cpp">
+      <Filter>ソース ファイル\Plugin</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

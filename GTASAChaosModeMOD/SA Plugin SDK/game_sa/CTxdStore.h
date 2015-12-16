@@ -1,13 +1,16 @@
 #pragma once
 
-#include "plugin\plugin.h"
-#include "RenderWare.h"
+#include <plugin/plugin.h>
+#include "RenderWareTypes.h"
 #include "CTexDictionary.h"
+#include "CPool.h"
 
 class PLUGIN_API CTxdStore
 {
 public:
 	// class variables
+
+	static CPool<CTexDictionary> *&ms_pTxdPool;
 
 	static RwTexDictionary *ms_pStoredTxd;
 	// variables list is not finished. Need to make CPools before.

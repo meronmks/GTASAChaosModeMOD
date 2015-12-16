@@ -1,6 +1,5 @@
 #pragma once
-#include "plugin\plugin.h"
-#include "RenderWare.h"
+#include <plugin/plugin.h>
 #include "CVector.h"
 
 #pragma pack(push, 4)
@@ -17,7 +16,7 @@ public:
 };
 #pragma pack(pop)
 
-VALIDATE_STRUCT_SIZE(CBulletTrace, 0x2C);
+VALIDATE_SIZE(CBulletTrace, 0x2C);
 
 #define MAX_BULLETTRACES 16
 

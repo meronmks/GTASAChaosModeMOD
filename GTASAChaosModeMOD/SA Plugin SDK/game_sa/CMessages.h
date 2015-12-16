@@ -1,6 +1,6 @@
 #pragma once
 
-#include "plugin\plugin.h"
+#include <plugin/plugin.h>
 
 #pragma pack(push, 1)
 struct Message

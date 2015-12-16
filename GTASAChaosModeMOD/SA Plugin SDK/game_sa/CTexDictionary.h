@@ -1,7 +1,7 @@
 #pragma once
 
-#include "plugin\plugin.h"
-#include "RenderWare.h"
+#include <plugin/plugin.h>
+#include "RenderWareTypes.h"
 
 #pragma pack (push, 1)
 class PLUGIN_API CTexDictionary

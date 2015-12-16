@@ -6,11 +6,17 @@
 /* File last ed: 27.04.2013                                                                */
 #pragma once
 
+#define _D3D_INCLUDE
+
+#include "RenderWareTypes.h"
+
 #ifndef _IDA_EXPORT
 #include <stdarg.h>
 #endif
 // defines
-#include <d3d9.h>
+#ifdef _D3D_INCLUDE
+#include <D3D9Headers/d3dx9.h>
+#endif
 #define RWFORCEENUMSIZEINT ((int)((~((unsigned int)0))>>1))
 #define RWRGBALONG(r,g,b,a) ((unsigned int) (((a) << 24) | ((r) << 16) | ((g) << 8) | (b)))
 #define MAKECHUNKID(vendorID, chunkID) (((vendorID & 0xFFFFFF) << 8) | (chunkID & 0xFF))
@@ -28,9 +34,14 @@
 #define rtANIMGETINTERPFRAME( anim, nodeIndex ) ((void *)(((unsigned char *)&(anim[1]) + ((nodeIndex) * anim->currentInterpKeyFrameSize))))
 #define rpHANIMPOPPARENTMATRIX      0x01
 #define rpHANIMPUSHPARENTMATRIX     0x02
+#define rwFRAME 0
 #define rpATOMIC 1
 #define rpCLUMP 2
+#define rpLIGHT 3
+#define rwCAMERA 4
+#define rwTEXDICTIONARY 6
 #define rpWORLD 7
+#define rpGEOMETRY 8
 
 #define MACRO_START do
 #define MACRO_STOP while(0)
@@ -128,67 +139,688 @@ typedef class CClumpVisibility CClumpVisibility;
 typedef class CXEnvMapInfo CXEnvMapInfo;
 typedef class CAtomicVisibility CAtomicVisibility;
 #endif
+
 // unions
 typedef union RwStreamFile RwStreamFile;
 typedef union RwStreamUnion RwStreamUnion;
-// enums
+
+
+#if 1
+/****************************************Enumerations***************************************/
+// RwStreamType
+enum RwStreamType
+{
+    rwNASTREAM = 0,
+    rwSTREAMFILE,
+    rwSTREAMFILENAME,
+    rwSTREAMMEMORY,
+    rwSTREAMCUSTOM,
+    rwSTREAMTYPEFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+// RwStreamAccessType
+enum RwStreamAccessType
+{
+    rwNASTREAMACCESS = 0,
+    rwSTREAMREAD,
+    rwSTREAMWRITE,
+    rwSTREAMAPPEND,
+    rwSTREAMACCESSTYPEFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+// RwRenderState
+enum RwRenderState
+{
+    rwRENDERSTATENARENDERSTATE = 0,
+    rwRENDERSTATETEXTURERASTER,
+    rwRENDERSTATETEXTUREADDRESS,
+    rwRENDERSTATETEXTUREADDRESSU,
+    rwRENDERSTATETEXTUREADDRESSV,
+    rwRENDERSTATETEXTUREPERSPECTIVE,
+    rwRENDERSTATEZTESTENABLE,
+    rwRENDERSTATESHADEMODE,
+    rwRENDERSTATEZWRITEENABLE,
+    rwRENDERSTATETEXTUREFILTER,
+    rwRENDERSTATESRCBLEND,
+    rwRENDERSTATEDESTBLEND,
+    rwRENDERSTATEVERTEXALPHAENABLE,
+    rwRENDERSTATEBORDERCOLOR,
+    rwRENDERSTATEFOGENABLE,
+    rwRENDERSTATEFOGCOLOR,
+    rwRENDERSTATEFOGTYPE,
+    rwRENDERSTATEFOGDENSITY,
+    rwRENDERSTATECULLMODE = 20,
+    rwRENDERSTATESTENCILENABLE,
+    rwRENDERSTATESTENCILFAIL,
+    rwRENDERSTATESTENCILZFAIL,
+    rwRENDERSTATESTENCILPASS,
+    rwRENDERSTATESTENCILFUNCTION,
+    rwRENDERSTATESTENCILFUNCTIONREF,
+    rwRENDERSTATESTENCILFUNCTIONMASK,
+    rwRENDERSTATESTENCILFUNCTIONWRITEMASK,
+    rwRENDERSTATEALPHATESTFUNCTION,
+    rwRENDERSTATEALPHATESTFUNCTIONREF,
+    rwRENDERSTATEFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+// RwTextureCoordinateIndex
+enum RwTextureCoordinateIndex
+{
+    rwNARWTEXTURECOORDINATEINDEX = 0,
+    rwTEXTURECOORDINATEINDEX0,
+    rwTEXTURECOORDINATEINDEX1,
+    rwTEXTURECOORDINATEINDEX2,
+    rwTEXTURECOORDINATEINDEX3,
+    rwTEXTURECOORDINATEINDEX4,
+    rwTEXTURECOORDINATEINDEX5,
+    rwTEXTURECOORDINATEINDEX6,
+    rwTEXTURECOORDINATEINDEX7,
+    rwTEXTURECOORDINATEINDEXFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+// RwPlaneType
+enum RwPlaneType
+{
+    rwXPLANE = 0,
+    rwYPLANE = 4,
+    rwZPLANE = 8,
+    rwPLANETYPEFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+// RwPluginVendor
+enum RwPluginVendor
+{
+    rwVENDORID_CORE             = 0x000000L,
+    rwVENDORID_CRITERIONTK      = 0x000001L,
+    rwVENDORID_REDLINERACER     = 0x000002L,
+    rwVENDORID_CSLRD            = 0x000003L,
+    rwVENDORID_CRITERIONINT     = 0x000004L,
+    rwVENDORID_CRITERIONWORLD   = 0x000005L,
+    rwVENDORID_BETA             = 0x000006L,
+    rwVENDORID_CRITERIONRM      = 0x000007L,
+    rwVENDORID_CRITERIONRWA     = 0x000008L,
+    rwVENDORID_CRITERIONRWP     = 0x000009L,
+    rwPLUGINVENDORFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
 #ifndef _IDA_EXPORT
-typedef enum RwTextureCoordinateIndex RwTextureCoordinateIndex;
-typedef enum RwPlaneType RwPlaneType;
-typedef enum RwPluginVendor RwPluginVendor;
-typedef enum RwCorePluginID RwCorePluginID;
-typedef enum RwCriterionCoreID RwCriterionCoreID;
-typedef enum RwPlatformID RwPlatformID;
-typedef enum RwStreamType RwStreamType;
-typedef enum RwStreamAccessType RwStreamAccessType;
-typedef enum RwOpCombineType RwOpCombineType;
-typedef enum RwMatrixType RwMatrixType;
-typedef enum RwMatrixFlag RwMatrixFlag;
-typedef enum RwMatrixOptimizations RwMatrixOptimizations;
-typedef enum RwRenderState RwRenderState;
-typedef enum RwShadeMode RwShadeMode;
-typedef enum RwTextureFilterMode RwTextureFilterMode;
-typedef enum RwFogType RwFogType;
-typedef enum RwBlendFunction RwBlendFunction;
-typedef enum RwTextureAddressMode RwTextureAddressMode;
-typedef enum RwStencilOperation RwStencilOperation;
-typedef enum RwStencilFunction RwStencilFunction;
-typedef enum RwAlphaTestFunction RwAlphaTestFunction;
-typedef enum RwCullMode RwCullMode;
-typedef enum RwPrimitiveType RwPrimitiveType;
-typedef enum RwEngineStatus RwEngineStatus;
-typedef enum rxEmbeddedPacketState rxEmbeddedPacketState;
-typedef enum RwRasterLockMode RwRasterLockMode;
-typedef enum RwRasterFlipMode RwRasterFlipMode;
-typedef enum RwRasterType RwRasterType;
-typedef enum RwRasterFormat RwRasterFormat;
-typedef enum RwRasterPrivateFlag RwRasterPrivateFlag;
-typedef enum RwImageFlag RwImageFlag;
-typedef enum RwIm3DTransformFlags RwIm3DTransformFlags;
-typedef enum RwCameraClearMode RwCameraClearMode;
-typedef enum RwCameraProjection RwCameraProjection;
-typedef enum RwFrustumTestResult RwFrustumTestResult;
-typedef enum rwD3D9VertexShaderEffectType rwD3D9VertexShaderEffectType;
-typedef enum rwD3D9VertexShaderFogMode rwD3D9VertexShaderFogMode;
-typedef enum RpMeshHeaderFlags RpMeshHeaderFlags;
-typedef enum RpGeometryFlag RpGeometryFlag;
-typedef enum RpGeometryLockMode RpGeometryLockMode;
-typedef enum RpLightType RpLightType;
-typedef enum RpLightFlag RpLightFlag;
-typedef enum rpLightPrivateFlag rpLightPrivateFlag;
-typedef enum RpInterpolatorFlag rpInterpolatorFlag;
-typedef enum RpAtomicFlag RpAtomicFlag;
-typedef enum RpAtomicSetGeomFlag RpAtomicSetGeomFlag;
-typedef enum RpAtomicPrivateFlag rpAtomicPrivateFlag;
-typedef enum RpHAnimHierarchyFlag RpHAnimHierarchyFlag;
-typedef enum RpMatFXMaterialFlags  RpMatFXMaterialFlags;
-typedef enum RpMatFXD3D9Pipeline RpMatFXD3D9Pipeline;
-typedef enum RpWorldPrivateFlag RpWorldPrivateFlag;
-typedef enum RpWorldFlag RpWorldFlag;
-typedef enum RpWorldRenderOrder RpWorldRenderOrder;
-typedef enum RpD3D9GeometryUsageFlag RpD3D9GeometryUsageFlag;
-typedef enum RpD3D9WorldSectorUsageFlag RpD3D9WorldSectorUsageFlag;
-// other
+// RwCorePluginID
+enum RwCorePluginID
+{
+    rwID_NAOBJECT               = MAKECHUNKID(rwVENDORID_CORE, 0x00),
+    rwID_STRUCT                 = MAKECHUNKID(rwVENDORID_CORE, 0x01),
+    rwID_STRING                 = MAKECHUNKID(rwVENDORID_CORE, 0x02),
+    rwID_EXTENSION              = MAKECHUNKID(rwVENDORID_CORE, 0x03),
+    rwID_CAMERA                 = MAKECHUNKID(rwVENDORID_CORE, 0x05),
+    rwID_TEXTURE                = MAKECHUNKID(rwVENDORID_CORE, 0x06),
+    rwID_MATERIAL               = MAKECHUNKID(rwVENDORID_CORE, 0x07),
+    rwID_MATLIST                = MAKECHUNKID(rwVENDORID_CORE, 0x08),
+    rwID_ATOMICSECT             = MAKECHUNKID(rwVENDORID_CORE, 0x09),
+    rwID_PLANESECT              = MAKECHUNKID(rwVENDORID_CORE, 0x0A),
+    rwID_WORLD                  = MAKECHUNKID(rwVENDORID_CORE, 0x0B),
+    rwID_SPLINE                 = MAKECHUNKID(rwVENDORID_CORE, 0x0C),
+    rwID_MATRIX                 = MAKECHUNKID(rwVENDORID_CORE, 0x0D),
+    rwID_FRAMELIST              = MAKECHUNKID(rwVENDORID_CORE, 0x0E),
+    rwID_GEOMETRY               = MAKECHUNKID(rwVENDORID_CORE, 0x0F),
+    rwID_CLUMP                  = MAKECHUNKID(rwVENDORID_CORE, 0x10),
+    rwID_LIGHT                  = MAKECHUNKID(rwVENDORID_CORE, 0x12),
+    rwID_UNICODESTRING          = MAKECHUNKID(rwVENDORID_CORE, 0x13),
+    rwID_ATOMIC                 = MAKECHUNKID(rwVENDORID_CORE, 0x14),
+    rwID_TEXTURENATIVE          = MAKECHUNKID(rwVENDORID_CORE, 0x15),
+    rwID_TEXDICTIONARY          = MAKECHUNKID(rwVENDORID_CORE, 0x16),
+    rwID_ANIMDATABASE           = MAKECHUNKID(rwVENDORID_CORE, 0x17),
+    rwID_IMAGE                  = MAKECHUNKID(rwVENDORID_CORE, 0x18),
+    rwID_SKINANIMATION          = MAKECHUNKID(rwVENDORID_CORE, 0x19),
+    rwID_GEOMETRYLIST           = MAKECHUNKID(rwVENDORID_CORE, 0x1A),
+    rwID_ANIMANIMATION          = MAKECHUNKID(rwVENDORID_CORE, 0x1B),
+    rwID_HANIMANIMATION         = MAKECHUNKID(rwVENDORID_CORE, 0x1B),
+    rwID_TEAM                   = MAKECHUNKID(rwVENDORID_CORE, 0x1C),
+    rwID_CROWD                  = MAKECHUNKID(rwVENDORID_CORE, 0x1D),
+    rwID_DMORPHANIMATION        = MAKECHUNKID(rwVENDORID_CORE, 0x1E),
+    rwID_RIGHTTORENDER          = MAKECHUNKID(rwVENDORID_CORE, 0x1f),
+    rwID_MTEFFECTNATIVE         = MAKECHUNKID(rwVENDORID_CORE, 0x20),
+    rwID_MTEFFECTDICT           = MAKECHUNKID(rwVENDORID_CORE, 0x21),
+    rwID_TEAMDICTIONARY         = MAKECHUNKID(rwVENDORID_CORE, 0x22),
+    rwID_PITEXDICTIONARY        = MAKECHUNKID(rwVENDORID_CORE, 0x23),
+    rwID_TOC                    = MAKECHUNKID(rwVENDORID_CORE, 0x24),
+    rwID_PRTSTDGLOBALDATA       = MAKECHUNKID(rwVENDORID_CORE, 0x25),
+    rwID_ALTPIPE                = MAKECHUNKID(rwVENDORID_CORE, 0x26),
+    rwID_PIPEDS                 = MAKECHUNKID(rwVENDORID_CORE, 0x27),
+    rwID_PATCHMESH              = MAKECHUNKID(rwVENDORID_CORE, 0x28),
+    rwID_CHUNKGROUPSTART        = MAKECHUNKID(rwVENDORID_CORE, 0x29),
+    rwID_CHUNKGROUPEND          = MAKECHUNKID(rwVENDORID_CORE, 0x2A),
+    rwID_UVANIMDICT             = MAKECHUNKID(rwVENDORID_CORE, 0x2B),
+    rwID_COLLTREE               = MAKECHUNKID(rwVENDORID_CORE, 0x2C),
+    rwID_ENVIRONMENT            = MAKECHUNKID(rwVENDORID_CORE, 0x2D),
+    rwID_COREPLUGINIDMAX        = MAKECHUNKID(rwVENDORID_CORE, 0x2E),
+    rwCOREPLUGINIDFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+#endif
+// RwCriterionCoreID
+enum RwCriterionCoreID
+{
+    rwID_NACOREID               = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x00),
+    rwID_VECTORMODULE           = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x01),
+    rwID_MATRIXMODULE           = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x02),
+    rwID_FRAMEMODULE            = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x03),
+    rwID_STREAMMODULE           = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x04),
+    rwID_CAMERAMODULE           = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x05),
+    rwID_IMAGEMODULE            = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x06),
+    rwID_RASTERMODULE           = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x07),
+    rwID_TEXTUREMODULE          = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x08),
+    rwID_PIPEMODULE             = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x09),
+    rwID_IMMEDIATEMODULE        = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x0A),
+    rwID_RESOURCESMODULE        = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x0B),
+    rwID_DEVICEMODULE           = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x0C),
+    rwID_COLORMODULE            = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x0D),
+    rwID_POLYPIPEMODULE         = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x0E),
+    rwID_ERRORMODULE            = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x0F),
+    rwID_METRICSMODULE          = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x10),
+    rwID_DRIVERMODULE           = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x11),
+    rwID_CHUNKGROUPMODULE       = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x12),
+    rwCRITERIONCOREIDFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+// RwPlatformID
+enum RwPlatformID
+{
+    rwID_PCD3D7 = 1,
+    rwID_PCOGL,
+    rwID_MAC,
+    rwID_PS2,
+    rwID_XBOX,
+    rwID_GAMECUBE,
+    rwID_SOFTRAS,
+    rwID_PCD3D8,
+    rwID_PCD3D9,
+    rwPLATFROMIDFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+// RwOpCombineType
+enum RwOpCombineType
+{
+    rwCOMBINEREPLACE = 0,
+    rwCOMBINEPRECONCAT,
+    rwCOMBINEPOSTCONCAT,
+    rwOPCOMBINETYPEFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+// RwMatrixType
+enum RwMatrixType
+{
+    rwMATRIXTYPENORMAL = 0x00000001,
+    rwMATRIXTYPEORTHOGONAL = 0x00000002,
+    rwMATRIXTYPEORTHONORMAL = 0x00000003,
+    rwMATRIXTYPEMASK = 0x00000003,
+    rwMATRIXTYPEFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+// RwMatrixFlag
+enum RwMatrixFlag
+{
+    rwMATRIXINTERNALIDENTITY = 0x00020000,
+    rwMATRIXFLAGFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+// RwMatrixOptimizations
+enum RwMatrixOptimizations
+{
+    rwMATRIXOPTIMIZE_IDENTITY = 0x00020000,
+    rwMATRIXOPTIMIZATIONSFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+// RwShadeMode
+enum RwShadeMode
+{
+    rwSHADEMODENASHADEMODE = 0,
+    rwSHADEMODEFLAT,
+    rwSHADEMODEGOURAUD,
+    rwSHADEMODEFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+// RwTextureFilterMode
+enum RwTextureFilterMode
+{
+    rwFILTERNAFILTERMODE = 0,
+    rwFILTERNEAREST,
+    rwFILTERLINEAR,
+    rwFILTERMIPNEAREST,
+    rwFILTERMIPLINEAR,
+    rwFILTERLINEARMIPNEAREST,
+    rwFILTERLINEARMIPLINEAR,
+    rwTEXTUREFILTERMODEFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+// RwFogType
+enum RwFogType
+{
+    rwFOGTYPENAFOGTYPE = 0,
+    rwFOGTYPELINEAR,
+    rwFOGTYPEEXPONENTIAL,
+    rwFOGTYPEEXPONENTIAL2,
+    rwFOGTYPEFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+// RwBlendFunction
+enum RwBlendFunction
+{
+    rwBLENDNABLEND = 0,
+    rwBLENDZERO,
+    rwBLENDONE,
+    rwBLENDSRCCOLOR,
+    rwBLENDINVSRCCOLOR,
+    rwBLENDSRCALPHA,
+    rwBLENDINVSRCALPHA,
+    rwBLENDDESTALPHA,
+    rwBLENDINVDESTALPHA,
+    rwBLENDDESTCOLOR,
+    rwBLENDINVDESTCOLOR,
+    rwBLENDSRCALPHASAT,
+    rwBLENDFUNCTIONFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+#if 0
+// RwTextureAddressMode
+enum RwTextureAddressMode
+{
+    rwTEXTUREADDRESSNATEXTUREADDRESS = 0,
+    rwTEXTUREADDRESSWRAP,
+    rwTEXTUREADDRESSMIRROR,
+    rwTEXTUREADDRESSCLAMP,
+    rwTEXTUREADDRESSBORDER,
+    rwTEXTUREADDRESSMODEFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+#endif
+// RwStencilOperation
+enum RwStencilOperation
+{
+    rwSTENCILOPERATIONNASTENCILOPERATION = 0,
+    rwSTENCILOPERATIONKEEP,
+    rwSTENCILOPERATIONZERO,
+    rwSTENCILOPERATIONREPLACE,
+    rwSTENCILOPERATIONINCRSAT,
+    rwSTENCILOPERATIONDECRSAT,   
+    rwSTENCILOPERATIONINVERT,
+    rwSTENCILOPERATIONINCR,
+    rwSTENCILOPERATIONDECR,
+    rwSTENCILOPERATIONFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+// RwStencilFunction
+enum RwStencilFunction
+{
+    rwSTENCILFUNCTIONNASTENCILFUNCTION = 0,
+    rwSTENCILFUNCTIONNEVER,
+    rwSTENCILFUNCTIONLESS,
+    rwSTENCILFUNCTIONEQUAL,
+    rwSTENCILFUNCTIONLESSEQUAL,
+    rwSTENCILFUNCTIONGREATER,
+    rwSTENCILFUNCTIONNOTEQUAL,
+    rwSTENCILFUNCTIONGREATEREQUAL,
+    rwSTENCILFUNCTIONALWAYS,
+    rwSTENCILFUNCTIONFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+// RwAlphaTestFunction
+enum RwAlphaTestFunction
+{
+    rwALPHATESTFUNCTIONNAALPHATESTFUNCTION = 0,
+    rwALPHATESTFUNCTIONNEVER,
+    rwALPHATESTFUNCTIONLESS,
+    rwALPHATESTFUNCTIONEQUAL,
+    rwALPHATESTFUNCTIONLESSEQUAL,
+    rwALPHATESTFUNCTIONGREATER,
+    rwALPHATESTFUNCTIONNOTEQUAL,
+    rwALPHATESTFUNCTIONGREATEREQUAL,
+    rwALPHATESTFUNCTIONALWAYS,
+    rwALPHATESTFUNCTIONFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+// RwCullMode
+enum RwCullMode
+{
+    rwCULLMODENACULLMODE = 0,
+    rwCULLMODECULLNONE,
+    rwCULLMODECULLBACK,
+    rwCULLMODECULLFRONT,
+    rwCULLMODEFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+// RwPrimitiveType
+enum RwPrimitiveType
+{
+    rwPRIMTYPENAPRIMTYPE = 0,
+    rwPRIMTYPELINELIST = 1,
+    rwPRIMTYPEPOLYLINE = 2,
+    rwPRIMTYPETRILIST = 3,
+    rwPRIMTYPETRISTRIP = 4,
+    rwPRIMTYPETRIFAN = 5,
+    rwPRIMTYPEPOINTLIST = 6,
+    rwPRIMITIVETYPEFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+// RwEngineStatus
+enum RwEngineStatus
+{
+    rwENGINESTATUSIDLE = 0,
+    rwENGINESTATUSINITED = 1,
+    rwENGINESTATUSOPENED = 2,
+    rwENGINESTATUSSTARTED = 3,
+    rwENGINESTATUSFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+// rxEmbeddedPacketState
+enum rxEmbeddedPacketState
+{
+    rxPKST_PACKETLESS = 0,
+    rxPKST_UNUSED     = 1,
+    rxPKST_INUSE      = 2,
+    rxPKST_PENDING    = 3,
+    rxEMBEDDEDPACKETSTATEFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+// RwRasterLockMode
+enum RwRasterLockMode
+{
+    rwRASTERLOCKWRITE = 0x01,
+    rwRASTERLOCKREAD = 0x02,
+    rwRASTERLOCKNOFETCH = 0x04,
+    rwRASTERLOCKRAW = 0x08,
+    rwRASTERLOCKMODEFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+// RwRasterFlipMode
+enum RwRasterFlipMode
+{
+    rwRASTERFLIPDONTWAIT = 0,
+    rwRASTERFLIPWAITVSYNC = 1,
+    rwRASTERFLIPMODEFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+// RwRasterType
+enum RwRasterType
+{
+    rwRASTERTYPENORMAL = 0x00,
+    rwRASTERTYPEZBUFFER = 0x01,
+    rwRASTERTYPECAMERA = 0x02,
+    rwRASTERTYPETEXTURE = 0x04,
+    rwRASTERTYPECAMERATEXTURE = 0x05,
+    rwRASTERTYPEMASK = 0x07,
+    rwRASTERPALETTEVOLATILE = 0x40,
+    rwRASTERDONTALLOCATE = 0x80,
+    rwRASTERTYPEFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+// RwRasterFormat
+enum RwRasterFormat
+{
+    rwRASTERFORMATDEFAULT = 0x0000,
+    rwRASTERFORMAT1555 = 0x0100,
+    rwRASTERFORMAT565 = 0x0200,
+    rwRASTERFORMAT4444 = 0x0300,
+    rwRASTERFORMATLUM8 = 0x0400,
+    rwRASTERFORMAT8888 = 0x0500,
+    rwRASTERFORMAT888 = 0x0600,
+    rwRASTERFORMAT16 = 0x0700,
+    rwRASTERFORMAT24 = 0x0800,
+    rwRASTERFORMAT32 = 0x0900,
+    rwRASTERFORMAT555 = 0x0a00,
+    rwRASTERFORMATAUTOMIPMAP = 0x1000,
+    rwRASTERFORMATPAL8 = 0x2000,
+    rwRASTERFORMATPAL4 = 0x4000,
+    rwRASTERFORMATMIPMAP = 0x8000,
+    rwRASTERFORMATPIXELFORMATMASK = 0x0f00,
+    rwRASTERFORMATMASK = 0xff00,
+    rwRASTERFORMATFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+// RwRasterPrivateFlag
+enum RwRasterPrivateFlag
+{
+    rwRASTERGAMMACORRECTED = 0x01,
+    rwRASTERPIXELLOCKEDREAD = 0x02,
+    rwRASTERPIXELLOCKEDWRITE = 0x04,
+    rwRASTERPALETTELOCKEDREAD = 0x08,
+    rwRASTERPALETTELOCKEDWRITE = 0x10,
+    rwRASTERPIXELLOCKEDRAW = 0x20,
+    rwRASTERPRIVATEFLAGFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+// RwImageFlag
+enum RwImageFlag
+{
+    rwNAIMAGEFLAG = 0x00,
+    rwIMAGEALLOCATED = 0x1,
+    rwIMAGEGAMMACORRECTED = 0x2,
+    rwIMAGEFLAGFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+// RwIm3DTransformFlags
+enum RwIm3DTransformFlags
+{
+    rwIM3D_VERTEXUV      = 1,
+    rwIM3D_ALLOPAQUE     = 2,
+    rwIM3D_NOCLIP        = 4,
+    rwIM3D_VERTEXXYZ     = 8,
+    rwIM3D_VERTEXRGBA    = 16,
+    rwIM3DTRANSFORMFLAGSFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+// RwCameraClearMode
+enum RwCameraClearMode
+{
+    rwCAMERACLEARIMAGE = 0x1,
+    rwCAMERACLEARZ = 0x2,
+    rwCAMERACLEARSTENCIL = 0x4,
+    rwCAMERACLEARMODEFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+// RwCameraProjection
+enum RwCameraProjection
+{
+    rwNACAMERAPROJECTION = 0,
+    rwPERSPECTIVE = 1,
+    rwPARALLEL = 2,
+    rwCAMERAPROJECTIONFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+// RwFrustumTestResult
+enum RwFrustumTestResult
+{
+    rwSPHEREOUTSIDE = 0,
+    rwSPHEREBOUNDARY = 1,
+    rwSPHEREINSIDE = 2,
+    rwFRUSTUMTESTRESULTFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+// rwD3D9VertexShaderEffectType
+enum rwD3D9VertexShaderEffectType
+{
+    rwD3D9VERTEXSHADEREFFECT_NONE = 0,
+    rwD3D9VERTEXSHADEREFFECT_BUMPMAP = 1,
+    rwD3D9VERTEXSHADEREFFECT_ENVMAP,
+    rwD3D9VERTEXSHADEREFFECT_BUMPENVMAP,
+    rwD3D9VERTEXSHADEREFFECT_DUAL,
+    rwD3D9VERTEXSHADEREFFECT_DUALREPLICATE,
+    rwD3D9VERTEXSHADEREFFECT_UVANIM,
+    rwD3D9VERTEXSHADEREFFECT_DUALUVANIM,
+    rwD3D9VERTEXSHADEREFFECT_NORMALMAP,
+    rwD3D9VERTEXSHADEREFFECT_NORMALENVMAP,
+    rwD3D9VERTEXSHADEREFFECT_CUBEMAP,
+    rwD3D9VERTEXSHADEREFFECT_BUMPCUBEMAP,
+    rwD3D9VERTEXSHADEREFFECT_MAX = (1 << 6),
+};
+// rwD3D9VertexShaderFogMode
+enum rwD3D9VertexShaderFogMode
+{
+    rwD3D9VERTEXSHADERFOG_NONE = 0,
+    rwD3D9VERTEXSHADERFOG_LINEAR = 1,
+    rwD3D9VERTEXSHADERFOG_EXP,
+    rwD3D9VERTEXSHADERFOG_EXP2,
+    rwD3D9VERTEXSHADERFOG_MAX
+};
+// RpMeshHeaderFlags
+enum RpMeshHeaderFlags
+{
+    rpMESHHEADERTRISTRIP  = 0x0001,
+    rpMESHHEADERTRIFAN    = 0x0002,
+    rpMESHHEADERLINELIST  = 0x0004,
+    rpMESHHEADERPOLYLINE  = 0x0008,
+    rpMESHHEADERPOINTLIST = 0x0010,
+    rpMESHHEADERPRIMMASK  = 0x00FF,
+    rpMESHHEADERUNINDEXED = 0x0100,
+    rpMESHHEADERFLAGSFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+// RpGeometryFlag
+enum RpGeometryFlag
+{
+    rpGEOMETRYTRISTRIP  = 0x00000001,
+    rpGEOMETRYPOSITIONS = 0x00000002,
+    rpGEOMETRYTEXTURED  = 0x00000004,
+    rpGEOMETRYPRELIT    = 0x00000008,
+    rpGEOMETRYNORMALS   = 0x00000010,
+    rpGEOMETRYLIGHT     = 0x00000020,
+    rpGEOMETRYMODULATEMATERIALCOLOR = 0x00000040,
+    rpGEOMETRYTEXTURED2 = 0x00000080,
+    rpGEOMETRYNATIVE            = 0x01000000,
+    rpGEOMETRYNATIVEINSTANCE    = 0x02000000,
+    rpGEOMETRYFLAGSMASK         = 0x000000FF,
+    rpGEOMETRYNATIVEFLAGSMASK   = 0x0F000000,
+    rpGEOMETRYFLAGFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+// RpGeometryLockMode
+enum RpGeometryLockMode
+{
+    rpGEOMETRYLOCKPOLYGONS   =   0x01,
+    rpGEOMETRYLOCKVERTICES   =   0x02,
+    rpGEOMETRYLOCKNORMALS    =   0x04,
+    rpGEOMETRYLOCKPRELIGHT   =   0x08,
+    rpGEOMETRYLOCKTEXCOORDS  =   0x10,
+    rpGEOMETRYLOCKTEXCOORDS1 =   0x10,
+    rpGEOMETRYLOCKTEXCOORDS2 =   0x20,
+    rpGEOMETRYLOCKTEXCOORDS3 =   0x40,
+    rpGEOMETRYLOCKTEXCOORDS4 =   0x80,
+    rpGEOMETRYLOCKTEXCOORDS5 = 0x0100,
+    rpGEOMETRYLOCKTEXCOORDS6 = 0x0200,
+    rpGEOMETRYLOCKTEXCOORDS7 = 0x0400,
+    rpGEOMETRYLOCKTEXCOORDS8 = 0x0800,
+    rpGEOMETRYLOCKTEXCOORDSALL = 0x0ff0,
+    rpGEOMETRYLOCKALL        = 0x0fff,
+    rpGEOMETRYLOCKMODEFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+// RpLightType
+enum RpLightType
+{
+    rpNALIGHTTYPE = 0,
+    rpLIGHTDIRECTIONAL,
+    rpLIGHTAMBIENT,
+    rpLIGHTPOINT = rpLIGHTPOSITIONINGSTART,
+    rpLIGHTSPOT,
+    rpLIGHTSPOTSOFT,
+    rpLIGHTTYPEFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+// RpLightFlag
+enum RpLightFlag
+{
+    rpLIGHTLIGHTATOMICS = 0x01,
+    rpLIGHTLIGHTWORLD = 0x02,
+    rpLIGHTFLAGFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+// rpLightPrivateFlag
+enum rpLightPrivateFlag
+{
+    rpLIGHTPRIVATENOCHROMA = 0x01,
+    rpLIGHTPRIVATEFLAGFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+// RpInterpolatorFlag
+enum RpInterpolatorFlag
+{
+    rpINTERPOLATORDIRTYINSTANCE = 0x01,
+    rpINTERPOLATORDIRTYSPHERE = 0x02,
+    rpINTERPOLATORNOFRAMEDIRTY = 0x04,
+    rpINTERPOLATORFLAGFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+// RpAtomicFlag
+enum RpAtomicFlag
+{
+    rpATOMICCOLLISIONTEST = 0x01,
+    rpATOMICRENDER = 0x04,
+    rpATOMICFLAGFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+// RpAtomicSetGeomFlag
+enum RpAtomicSetGeomFlag
+{
+    rpATOMICSAMEBOUNDINGSPHERE = 0x01,
+    rpATOMICSETGEOMFLAGFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+// RpAtomicPrivateFlag
+enum RpAtomicPrivateFlag
+{
+    rpATOMICPRIVATEWORLDBOUNDDIRTY = 0x01,
+    rpATOMICPRIVATEFLAGFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+// RpHAnimHierarchyFlag
+enum RpHAnimHierarchyFlag
+{
+    rpHANIMHIERARCHYSUBHIERARCHY =              0x01,
+    rpHANIMHIERARCHYNOMATRICES =                0x02,
+    rpHANIMHIERARCHYUPDATEMODELLINGMATRICES = 0x1000,
+    rpHANIMHIERARCHYUPDATELTMS =              0x2000,
+    rpHANIMHIERARCHYLOCALSPACEMATRICES =      0x4000,
+    rpHANIMHIERARCHYFLAGFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+// RpMatFXD3D9Pipeline
+enum RpMatFXD3D9Pipeline
+{
+    rpNAMATFXD3D9PIPELINE          = 0,
+    rpMATFXD3D9ATOMICPIPELINE      = 1,
+    rpMATFXD3D9WORLDSECTORPIPELINE = 2,
+    rpMATFXD3D9PIPELINEMAX,
+    rpMATFXD3D9PIPELINEFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+// RpMatFXMaterialFlags
+enum RpMatFXMaterialFlags
+{
+    rpMATFXEFFECTNULL            = 0,
+    rpMATFXEFFECTBUMPMAP         = 1,
+    rpMATFXEFFECTENVMAP          = 2,
+    rpMATFXEFFECTBUMPENVMAP      = 3,
+    rpMATFXEFFECTDUAL            = 4,
+    rpMATFXEFFECTUVTRANSFORM     = 5,
+    rpMATFXEFFECTDUALUVTRANSFORM = 6,
+    rpMATFXEFFECTMAX,
+    rpMATFXNUMEFFECTS       = rpMATFXEFFECTMAX - 1,
+    rpMATFXFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+// RpWorldPrivateFlag
+enum RpWorldPrivateFlag
+{
+    rpWORLDSINGLEMALLOC = 0x01,
+    rpWORLDPRIVATEFLAGFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+// RpWorldFlag
+enum RpWorldFlag
+{
+    rpWORLDTRISTRIP  = 0x01,
+    rpWORLDPOSITIONS = 0x02,
+    rpWORLDTEXTURED  = 0x04,
+    rpWORLDPRELIT    = 0x08,
+    rpWORLDNORMALS   = 0x10,
+    rpWORLDLIGHT     = 0x20,
+    rpWORLDMODULATEMATERIALCOLOR = 0x40, 
+    rpWORLDTEXTURED2 = 0x80,
+    rpWORLDNATIVE               = 0x01000000,
+    rpWORLDNATIVEINSTANCE       = 0x02000000,
+    rpWORLDFLAGSMASK            = 0x000000FF,
+    rpWORLDNATIVEFLAGSMASK      = 0x0F000000,
+    rpWORLDSECTORSOVERLAP       = 0x40000000,
+    rpWORLDFLAGFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+// RpWorldRenderOrder
+enum RpWorldRenderOrder
+{
+    rpWORLDRENDERNARENDERORDER = 0,
+    rpWORLDRENDERFRONT2BACK,
+    rpWORLDRENDERBACK2FRONT,
+    rpWORLDRENDERORDERFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+// RpD3D9GeometryUsageFlag
+enum RpD3D9GeometryUsageFlag
+{
+    rpD3D9GEOMETRYUSAGE_DYNAMICPOSITIONS  =     0x02,
+    rpD3D9GEOMETRYUSAGE_DYNAMICNORMALS    =     0x04,
+    rpD3D9GEOMETRYUSAGE_DYNAMICPRELIT     =     0x08,
+    rpD3D9GEOMETRYUSAGE_DYNAMICTEXCOORDS  =     0x10,
+    rpD3D9GEOMETRYUSAGE_DYNAMICTEXCOORDS1 =     0x10,
+    rpD3D9GEOMETRYUSAGE_DYNAMICTEXCOORDS2 =     0x20,
+    rpD3D9GEOMETRYUSAGE_DYNAMICTEXCOORDS3 =     0x40,
+    rpD3D9GEOMETRYUSAGE_DYNAMICTEXCOORDS4 =     0x80,
+    rpD3D9GEOMETRYUSAGE_DYNAMICTEXCOORDS5 =   0x0100,
+    rpD3D9GEOMETRYUSAGE_DYNAMICTEXCOORDS6 =   0x0200,
+    rpD3D9GEOMETRYUSAGE_DYNAMICTEXCOORDS7 =   0x0400,
+    rpD3D9GEOMETRYUSAGE_DYNAMICTEXCOORDS8 =   0x0800,
+    rpD3D9GEOMETRYUSAGE_DYNAMICTEXCOORDSALL = 0x0ff0,
+    rpD3D9GEOMETRYUSAGE_DYNAMICMASK       =   0x0fff,
+    rpD3D9GEOMETRYUSAGE_CREATETANGENTS    =  0x10000,
+    rpD3D9GEOMETRYUSAGEFLAGFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+// RpD3D9WorldSectorUsageFlag
+enum RpD3D9WorldSectorUsageFlag
+{
+    rpD3D9WORLDSECTORUSAGE_CREATETANGENTS    =  0x10000,
+    rpD3D9WORLDSECTORUSAGEFLAGFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+};
+#endif
+
+/******************************************Funcs****************************************/
+#ifndef _IDA_EXPORT
 typedef int(*rwCustomStreamFnClose) (void *data);
 typedef unsigned int(*rwCustomStreamFnRead) (void *data, void *buffer, unsigned int length);
 typedef int(*rwCustomStreamFnWrite) (void *data, const void *buffer, unsigned int length);
@@ -248,6 +880,7 @@ typedef int (*RtAnimKeyFrameStreamGetSizeCallBack) (const RtAnimAnimation *anima
 typedef RtAnimInterpolator * (*RtAnimCallBack) (RtAnimInterpolator *animInstance, void *data);
 typedef RpWorldSector *(*RpWorldSectorCallBackRender) (RpWorldSector *worldSector);
 #endif
+
 /******************************************Structures****************************************/
 // RwV2d
 struct RwV2d
@@ -671,26 +1304,30 @@ struct RwRaster
     int            originalHeight;
     int            originalStride;
 #ifndef _IDA_EXPORT
+#ifdef _D3D_INCLUDE
     // RenderWare plugin
-    struct
+    struct RwD3DRaster
     {
         union
         {
             IDirect3DTexture9 *texture;
+			IDirect3DCubeTexture9 *cubeTexture;
             IDirect3DSurface9 *surface;
         };
         unsigned char       *palette;
-        unsigned char        alpha;
-        unsigned char        cubeTextureFlags; /* 0x01 IS_CUBEMAP_TEX */
-        unsigned char        textureFlags;     /* 0x01 HAS_MIP_MAPS
-                                                  0x10 IS_COMPRESSED */
+        unsigned char        hasAlpha;
+        unsigned char        isCubeMap : 4;
+		unsigned char        selectedCubeFace : 4;
+        unsigned char        autoMipMapping : 4;
+		unsigned char        hasCompression : 4;
         unsigned char        lockFlags;
         IDirect3DSurface9   *lockedSurface;
         D3DLOCKED_RECT       lockedRect;
         D3DFORMAT            format;
         IDirect3DSwapChain9 *swapChain;
         HWND                *hwnd;
-    } RwD3D9Raster;
+    } d3dRaster;
+#endif
 #endif
 };
 // RxObjSpace3DVertex
@@ -730,7 +1367,14 @@ struct RwTexture
     RwLLLink        lInDictionary;
     char            name[32];
     char            mask[32];
-    unsigned int    filterAddressing;
+	union{
+		unsigned int    filterAddressing;
+		struct{
+			unsigned int filter : 8;
+			unsigned int uAddressing : 4;
+			unsigned int vAddressing : 4;
+		};
+	};
     int             refCount;
     // Renderware plugin
     unsigned char   maxAnisotropy;
@@ -1100,6 +1744,17 @@ struct RpClump
     CHAnim           *anim;
 #endif
 };
+
+typedef struct RpClumpChunkInfo RpClumpChunkInfo;
+typedef struct RpClumpChunkInfo _rpClump;
+
+struct RpClumpChunkInfo
+{
+    int numAtomics;
+    int numLights;
+    int numCameras;
+};
+
 // CBone
 #ifndef _IDA_EXPORT
 class CBone
@@ -1221,6 +1876,49 @@ struct RtAnimAnimation
     void                   *pFrames;
     void                   *customData;
 };
+
+typedef struct RwPluginRegistry RwPluginRegistry;
+typedef struct RwPluginRegEntry RwPluginRegEntry;
+
+struct RwPluginRegistry
+{
+    unsigned int      sizeOfStruct;
+    unsigned int      origSizeOfStruct;
+    unsigned int      maxSizeOfStruct;
+    unsigned int      staticAlloc;
+    RwPluginRegEntry *firstRegEntry;
+    RwPluginRegEntry *lastRegEntry;
+};
+
+typedef RwStream *(*RwPluginDataChunkWriteCallBack)(RwStream *stream, int binaryLength, const void *object, int offsetInObject, int sizeInObject);
+typedef RwStream *(*RwPluginDataChunkReadCallBack)(RwStream *stream, int binaryLength, void *object, int offsetInObject, int sizeInObject);
+typedef int(*RwPluginDataChunkGetSizeCallBack)(const void *object, int offsetInObject, int sizeInObject);
+typedef bool(*RwPluginDataChunkAlwaysCallBack)(void *object, int offsetInObject, int sizeInObject);
+typedef bool(*RwPluginDataChunkRightsCallBack)(void *object, int offsetInObject, int sizeInObject, int extraData);
+typedef void *(*RwPluginObjectConstructor)(void *object, int offsetInObject, int sizeInObject);
+typedef void *(*RwPluginObjectCopy)(void *dstObject, const void *srcObject, int offsetInObject, int sizeInObject);
+typedef void *(*RwPluginObjectDestructor)(void *object, int offsetInObject, int sizeInObject);
+typedef void *(*RwPluginErrorStrCallBack)(void *);
+
+struct RwPluginRegEntry
+{
+    int             offset;
+    int             size;
+    unsigned int    pluginID;
+    RwPluginDataChunkReadCallBack readCB;
+    RwPluginDataChunkWriteCallBack writeCB;
+    RwPluginDataChunkGetSizeCallBack getSizeCB;
+    RwPluginDataChunkAlwaysCallBack alwaysCB;
+    RwPluginDataChunkRightsCallBack rightsCB;
+    RwPluginObjectConstructor constructCB;
+    RwPluginObjectDestructor destructCB;
+    RwPluginObjectCopy copyCB;
+    RwPluginErrorStrCallBack errStrCB;
+    RwPluginRegEntry *nextRegEntry;
+    RwPluginRegEntry *prevRegEntry;
+    RwPluginRegistry *parentRegistry;
+};
+
 // RtAnimKeyFrameHeader
 struct RtAnimKeyFrameHeader
 {
@@ -1369,693 +2067,42 @@ struct RpSector
 {
     int type;
 };
-/****************************************Enumerations***************************************/
-// RwTextureCoordinateIndex
-enum RwTextureCoordinateIndex
+
+struct RpGeometryChunkInfo
 {
-    rwNARWTEXTURECOORDINATEINDEX = 0,
-    rwTEXTURECOORDINATEINDEX0,
-    rwTEXTURECOORDINATEINDEX1,
-    rwTEXTURECOORDINATEINDEX2,
-    rwTEXTURECOORDINATEINDEX3,
-    rwTEXTURECOORDINATEINDEX4,
-    rwTEXTURECOORDINATEINDEX5,
-    rwTEXTURECOORDINATEINDEX6,
-    rwTEXTURECOORDINATEINDEX7,
-    rwTEXTURECOORDINATEINDEXFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-// RwPlaneType
-enum RwPlaneType
-{
-    rwXPLANE = 0,
-    rwYPLANE = 4,
-    rwZPLANE = 8,
-    rwPLANETYPEFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-// RwPluginVendor
-enum RwPluginVendor
-{
-    rwVENDORID_CORE             = 0x000000L,
-    rwVENDORID_CRITERIONTK      = 0x000001L,
-    rwVENDORID_REDLINERACER     = 0x000002L,
-    rwVENDORID_CSLRD            = 0x000003L,
-    rwVENDORID_CRITERIONINT     = 0x000004L,
-    rwVENDORID_CRITERIONWORLD   = 0x000005L,
-    rwVENDORID_BETA             = 0x000006L,
-    rwVENDORID_CRITERIONRM      = 0x000007L,
-    rwVENDORID_CRITERIONRWA     = 0x000008L,
-    rwVENDORID_CRITERIONRWP     = 0x000009L,
-    rwPLUGINVENDORFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-#ifndef _IDA_EXPORT
-// RwCorePluginID
-enum RwCorePluginID
-{
-    rwID_NAOBJECT               = MAKECHUNKID(rwVENDORID_CORE, 0x00),
-    rwID_STRUCT                 = MAKECHUNKID(rwVENDORID_CORE, 0x01),
-    rwID_STRING                 = MAKECHUNKID(rwVENDORID_CORE, 0x02),
-    rwID_EXTENSION              = MAKECHUNKID(rwVENDORID_CORE, 0x03),
-    rwID_CAMERA                 = MAKECHUNKID(rwVENDORID_CORE, 0x05),
-    rwID_TEXTURE                = MAKECHUNKID(rwVENDORID_CORE, 0x06),
-    rwID_MATERIAL               = MAKECHUNKID(rwVENDORID_CORE, 0x07),
-    rwID_MATLIST                = MAKECHUNKID(rwVENDORID_CORE, 0x08),
-    rwID_ATOMICSECT             = MAKECHUNKID(rwVENDORID_CORE, 0x09),
-    rwID_PLANESECT              = MAKECHUNKID(rwVENDORID_CORE, 0x0A),
-    rwID_WORLD                  = MAKECHUNKID(rwVENDORID_CORE, 0x0B),
-    rwID_SPLINE                 = MAKECHUNKID(rwVENDORID_CORE, 0x0C),
-    rwID_MATRIX                 = MAKECHUNKID(rwVENDORID_CORE, 0x0D),
-    rwID_FRAMELIST              = MAKECHUNKID(rwVENDORID_CORE, 0x0E),
-    rwID_GEOMETRY               = MAKECHUNKID(rwVENDORID_CORE, 0x0F),
-    rwID_CLUMP                  = MAKECHUNKID(rwVENDORID_CORE, 0x10),
-    rwID_LIGHT                  = MAKECHUNKID(rwVENDORID_CORE, 0x12),
-    rwID_UNICODESTRING          = MAKECHUNKID(rwVENDORID_CORE, 0x13),
-    rwID_ATOMIC                 = MAKECHUNKID(rwVENDORID_CORE, 0x14),
-    rwID_TEXTURENATIVE          = MAKECHUNKID(rwVENDORID_CORE, 0x15),
-    rwID_TEXDICTIONARY          = MAKECHUNKID(rwVENDORID_CORE, 0x16),
-    rwID_ANIMDATABASE           = MAKECHUNKID(rwVENDORID_CORE, 0x17),
-    rwID_IMAGE                  = MAKECHUNKID(rwVENDORID_CORE, 0x18),
-    rwID_SKINANIMATION          = MAKECHUNKID(rwVENDORID_CORE, 0x19),
-    rwID_GEOMETRYLIST           = MAKECHUNKID(rwVENDORID_CORE, 0x1A),
-    rwID_ANIMANIMATION          = MAKECHUNKID(rwVENDORID_CORE, 0x1B),
-    rwID_HANIMANIMATION         = MAKECHUNKID(rwVENDORID_CORE, 0x1B),
-    rwID_TEAM                   = MAKECHUNKID(rwVENDORID_CORE, 0x1C),
-    rwID_CROWD                  = MAKECHUNKID(rwVENDORID_CORE, 0x1D),
-    rwID_DMORPHANIMATION        = MAKECHUNKID(rwVENDORID_CORE, 0x1E),
-    rwID_RIGHTTORENDER          = MAKECHUNKID(rwVENDORID_CORE, 0x1f),
-    rwID_MTEFFECTNATIVE         = MAKECHUNKID(rwVENDORID_CORE, 0x20),
-    rwID_MTEFFECTDICT           = MAKECHUNKID(rwVENDORID_CORE, 0x21),
-    rwID_TEAMDICTIONARY         = MAKECHUNKID(rwVENDORID_CORE, 0x22),
-    rwID_PITEXDICTIONARY        = MAKECHUNKID(rwVENDORID_CORE, 0x23),
-    rwID_TOC                    = MAKECHUNKID(rwVENDORID_CORE, 0x24),
-    rwID_PRTSTDGLOBALDATA       = MAKECHUNKID(rwVENDORID_CORE, 0x25),
-    rwID_ALTPIPE                = MAKECHUNKID(rwVENDORID_CORE, 0x26),
-    rwID_PIPEDS                 = MAKECHUNKID(rwVENDORID_CORE, 0x27),
-    rwID_PATCHMESH              = MAKECHUNKID(rwVENDORID_CORE, 0x28),
-    rwID_CHUNKGROUPSTART        = MAKECHUNKID(rwVENDORID_CORE, 0x29),
-    rwID_CHUNKGROUPEND          = MAKECHUNKID(rwVENDORID_CORE, 0x2A),
-    rwID_UVANIMDICT             = MAKECHUNKID(rwVENDORID_CORE, 0x2B),
-    rwID_COLLTREE               = MAKECHUNKID(rwVENDORID_CORE, 0x2C),
-    rwID_ENVIRONMENT            = MAKECHUNKID(rwVENDORID_CORE, 0x2D),
-    rwID_COREPLUGINIDMAX        = MAKECHUNKID(rwVENDORID_CORE, 0x2E),
-    rwCOREPLUGINIDFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-#endif
-// RwCriterionCoreID
-enum RwCriterionCoreID
-{
-    rwID_NACOREID               = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x00),
-    rwID_VECTORMODULE           = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x01),
-    rwID_MATRIXMODULE           = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x02),
-    rwID_FRAMEMODULE            = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x03),
-    rwID_STREAMMODULE           = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x04),
-    rwID_CAMERAMODULE           = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x05),
-    rwID_IMAGEMODULE            = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x06),
-    rwID_RASTERMODULE           = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x07),
-    rwID_TEXTUREMODULE          = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x08),
-    rwID_PIPEMODULE             = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x09),
-    rwID_IMMEDIATEMODULE        = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x0A),
-    rwID_RESOURCESMODULE        = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x0B),
-    rwID_DEVICEMODULE           = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x0C),
-    rwID_COLORMODULE            = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x0D),
-    rwID_POLYPIPEMODULE         = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x0E),
-    rwID_ERRORMODULE            = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x0F),
-    rwID_METRICSMODULE          = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x10),
-    rwID_DRIVERMODULE           = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x11),
-    rwID_CHUNKGROUPMODULE       = MAKECHUNKID(rwVENDORID_CRITERIONINT, 0x12),
-    rwCRITERIONCOREIDFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-// RwPlatformID
-enum RwPlatformID
-{
-    rwID_PCD3D7 = 1,
-    rwID_PCOGL,
-    rwID_MAC,
-    rwID_PS2,
-    rwID_XBOX,
-    rwID_GAMECUBE,
-    rwID_SOFTRAS,
-    rwID_PCD3D8,
-    rwID_PCD3D9,
-    rwPLATFROMIDFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-// RwStreamType
-enum RwStreamType
-{
-    rwNASTREAM = 0,
-    rwSTREAMFILE,
-    rwSTREAMFILENAME,
-    rwSTREAMMEMORY,
-    rwSTREAMCUSTOM,
-    rwSTREAMTYPEFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-// RwStreamAccessType
-enum RwStreamAccessType
-{
-    rwNASTREAMACCESS = 0,
-    rwSTREAMREAD,
-    rwSTREAMWRITE,
-    rwSTREAMAPPEND,
-    rwSTREAMACCESSTYPEFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-// RwOpCombineType
-enum RwOpCombineType
-{
-    rwCOMBINEREPLACE = 0,
-    rwCOMBINEPRECONCAT,
-    rwCOMBINEPOSTCONCAT,
-    rwOPCOMBINETYPEFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-// RwMatrixType
-enum RwMatrixType
-{
-    rwMATRIXTYPENORMAL = 0x00000001,
-    rwMATRIXTYPEORTHOGONAL = 0x00000002,
-    rwMATRIXTYPEORTHONORMAL = 0x00000003,
-    rwMATRIXTYPEMASK = 0x00000003,
-    rwMATRIXTYPEFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-// RwMatrixFlag
-enum RwMatrixFlag
-{
-    rwMATRIXINTERNALIDENTITY = 0x00020000,
-    rwMATRIXFLAGFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-// RwMatrixOptimizations
-enum RwMatrixOptimizations
-{
-    rwMATRIXOPTIMIZE_IDENTITY = 0x00020000,
-    rwMATRIXOPTIMIZATIONSFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-// RwRenderState
-enum RwRenderState
-{
-    rwRENDERSTATENARENDERSTATE = 0,
-    rwRENDERSTATETEXTURERASTER,
-    rwRENDERSTATETEXTUREADDRESS,
-    rwRENDERSTATETEXTUREADDRESSU,
-    rwRENDERSTATETEXTUREADDRESSV,
-    rwRENDERSTATETEXTUREPERSPECTIVE,
-    rwRENDERSTATEZTESTENABLE,
-    rwRENDERSTATESHADEMODE,
-    rwRENDERSTATEZWRITEENABLE,
-    rwRENDERSTATETEXTUREFILTER,
-    rwRENDERSTATESRCBLEND,
-    rwRENDERSTATEDESTBLEND,
-    rwRENDERSTATEVERTEXALPHAENABLE,
-    rwRENDERSTATEBORDERCOLOR,
-    rwRENDERSTATEFOGENABLE,
-    rwRENDERSTATEFOGCOLOR,
-    rwRENDERSTATEFOGTYPE,
-    rwRENDERSTATEFOGDENSITY,
-    rwRENDERSTATECULLMODE = 20,
-    rwRENDERSTATESTENCILENABLE,
-    rwRENDERSTATESTENCILFAIL,
-    rwRENDERSTATESTENCILZFAIL,
-    rwRENDERSTATESTENCILPASS,
-    rwRENDERSTATESTENCILFUNCTION,
-    rwRENDERSTATESTENCILFUNCTIONREF,
-    rwRENDERSTATESTENCILFUNCTIONMASK,
-    rwRENDERSTATESTENCILFUNCTIONWRITEMASK,
-    rwRENDERSTATEALPHATESTFUNCTION,
-    rwRENDERSTATEALPHATESTFUNCTIONREF,
-    rwRENDERSTATEFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-// RwShadeMode
-enum RwShadeMode
-{
-    rwSHADEMODENASHADEMODE = 0,
-    rwSHADEMODEFLAT,
-    rwSHADEMODEGOURAUD,
-    rwSHADEMODEFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-// RwTextureFilterMode
-enum RwTextureFilterMode
-{
-    rwFILTERNAFILTERMODE = 0,
-    rwFILTERNEAREST,
-    rwFILTERLINEAR,
-    rwFILTERMIPNEAREST,
-    rwFILTERMIPLINEAR,
-    rwFILTERLINEARMIPNEAREST,
-    rwFILTERLINEARMIPLINEAR,
-    rwTEXTUREFILTERMODEFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-// RwFogType
-enum RwFogType
-{
-    rwFOGTYPENAFOGTYPE = 0,
-    rwFOGTYPELINEAR,
-    rwFOGTYPEEXPONENTIAL,
-    rwFOGTYPEEXPONENTIAL2,
-    rwFOGTYPEFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-// RwBlendFunction
-enum RwBlendFunction
-{
-    rwBLENDNABLEND = 0,
-    rwBLENDZERO,
-    rwBLENDONE,
-    rwBLENDSRCCOLOR,
-    rwBLENDINVSRCCOLOR,
-    rwBLENDSRCALPHA,
-    rwBLENDINVSRCALPHA,
-    rwBLENDDESTALPHA,
-    rwBLENDINVDESTALPHA,
-    rwBLENDDESTCOLOR,
-    rwBLENDINVDESTCOLOR,
-    rwBLENDSRCALPHASAT,
-    rwBLENDFUNCTIONFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-// RwTextureAddressMode
-enum RwTextureAddressMode
-{
-    rwTEXTUREADDRESSNATEXTUREADDRESS = 0,
-    rwTEXTUREADDRESSWRAP,
-    rwTEXTUREADDRESSMIRROR,
-    rwTEXTUREADDRESSCLAMP,
-    rwTEXTUREADDRESSBORDER,
-    rwTEXTUREADDRESSMODEFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-// RwStencilOperation
-enum RwStencilOperation
-{
-    rwSTENCILOPERATIONNASTENCILOPERATION = 0,
-    rwSTENCILOPERATIONKEEP,
-    rwSTENCILOPERATIONZERO,
-    rwSTENCILOPERATIONREPLACE,
-    rwSTENCILOPERATIONINCRSAT,
-    rwSTENCILOPERATIONDECRSAT,   
-    rwSTENCILOPERATIONINVERT,
-    rwSTENCILOPERATIONINCR,
-    rwSTENCILOPERATIONDECR,
-    rwSTENCILOPERATIONFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-// RwStencilFunction
-enum RwStencilFunction
-{
-    rwSTENCILFUNCTIONNASTENCILFUNCTION = 0,
-    rwSTENCILFUNCTIONNEVER,
-    rwSTENCILFUNCTIONLESS,
-    rwSTENCILFUNCTIONEQUAL,
-    rwSTENCILFUNCTIONLESSEQUAL,
-    rwSTENCILFUNCTIONGREATER,
-    rwSTENCILFUNCTIONNOTEQUAL,
-    rwSTENCILFUNCTIONGREATEREQUAL,
-    rwSTENCILFUNCTIONALWAYS,
-    rwSTENCILFUNCTIONFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-// RwAlphaTestFunction
-enum RwAlphaTestFunction
-{
-    rwALPHATESTFUNCTIONNAALPHATESTFUNCTION = 0,
-    rwALPHATESTFUNCTIONNEVER,
-    rwALPHATESTFUNCTIONLESS,
-    rwALPHATESTFUNCTIONEQUAL,
-    rwALPHATESTFUNCTIONLESSEQUAL,
-    rwALPHATESTFUNCTIONGREATER,
-    rwALPHATESTFUNCTIONNOTEQUAL,
-    rwALPHATESTFUNCTIONGREATEREQUAL,
-    rwALPHATESTFUNCTIONALWAYS,
-    rwALPHATESTFUNCTIONFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-// RwCullMode
-enum RwCullMode
-{
-    rwCULLMODENACULLMODE = 0,
-    rwCULLMODECULLNONE,
-    rwCULLMODECULLBACK,
-    rwCULLMODECULLFRONT,
-    rwCULLMODEFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-// RwPrimitiveType
-enum RwPrimitiveType
-{
-    rwPRIMTYPENAPRIMTYPE = 0,
-    rwPRIMTYPELINELIST = 1,
-    rwPRIMTYPEPOLYLINE = 2,
-    rwPRIMTYPETRILIST = 3,
-    rwPRIMTYPETRISTRIP = 4,
-    rwPRIMTYPETRIFAN = 5,
-    rwPRIMTYPEPOINTLIST = 6,
-    rwPRIMITIVETYPEFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-// RwEngineStatus
-enum RwEngineStatus
-{
-    rwENGINESTATUSIDLE = 0,
-    rwENGINESTATUSINITED = 1,
-    rwENGINESTATUSOPENED = 2,
-    rwENGINESTATUSSTARTED = 3,
-    rwENGINESTATUSFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-// rxEmbeddedPacketState
-enum rxEmbeddedPacketState
-{
-    rxPKST_PACKETLESS = 0,
-    rxPKST_UNUSED     = 1,
-    rxPKST_INUSE      = 2,
-    rxPKST_PENDING    = 3,
-    rxEMBEDDEDPACKETSTATEFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-// RwRasterLockMode
-enum RwRasterLockMode
-{
-    rwRASTERLOCKWRITE = 0x01,
-    rwRASTERLOCKREAD = 0x02,
-    rwRASTERLOCKNOFETCH = 0x04,
-    rwRASTERLOCKRAW = 0x08,
-    rwRASTERLOCKMODEFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-// RwRasterFlipMode
-enum RwRasterFlipMode
-{
-    rwRASTERFLIPDONTWAIT = 0,
-    rwRASTERFLIPWAITVSYNC = 1,
-    rwRASTERFLIPMODEFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-// RwRasterType
-enum RwRasterType
-{
-    rwRASTERTYPENORMAL = 0x00,
-    rwRASTERTYPEZBUFFER = 0x01,
-    rwRASTERTYPECAMERA = 0x02,
-    rwRASTERTYPETEXTURE = 0x04,
-    rwRASTERTYPECAMERATEXTURE = 0x05,
-    rwRASTERTYPEMASK = 0x07,
-    rwRASTERPALETTEVOLATILE = 0x40,
-    rwRASTERDONTALLOCATE = 0x80,
-    rwRASTERTYPEFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-// RwRasterFormat
-enum RwRasterFormat
-{
-    rwRASTERFORMATDEFAULT = 0x0000,
-    rwRASTERFORMAT1555 = 0x0100,
-    rwRASTERFORMAT565 = 0x0200,
-    rwRASTERFORMAT4444 = 0x0300,
-    rwRASTERFORMATLUM8 = 0x0400,
-    rwRASTERFORMAT8888 = 0x0500,
-    rwRASTERFORMAT888 = 0x0600,
-    rwRASTERFORMAT16 = 0x0700,
-    rwRASTERFORMAT24 = 0x0800,
-    rwRASTERFORMAT32 = 0x0900,
-    rwRASTERFORMAT555 = 0x0a00,
-    rwRASTERFORMATAUTOMIPMAP = 0x1000,
-    rwRASTERFORMATPAL8 = 0x2000,
-    rwRASTERFORMATPAL4 = 0x4000,
-    rwRASTERFORMATMIPMAP = 0x8000,
-    rwRASTERFORMATPIXELFORMATMASK = 0x0f00,
-    rwRASTERFORMATMASK = 0xff00,
-    rwRASTERFORMATFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-// RwRasterPrivateFlag
-enum RwRasterPrivateFlag
-{
-    rwRASTERGAMMACORRECTED = 0x01,
-    rwRASTERPIXELLOCKEDREAD = 0x02,
-    rwRASTERPIXELLOCKEDWRITE = 0x04,
-    rwRASTERPALETTELOCKEDREAD = 0x08,
-    rwRASTERPALETTELOCKEDWRITE = 0x10,
-    rwRASTERPIXELLOCKEDRAW = 0x20,
-    rwRASTERPRIVATEFLAGFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-// RwImageFlag
-enum RwImageFlag
-{
-    rwNAIMAGEFLAG = 0x00,
-    rwIMAGEALLOCATED = 0x1,
-    rwIMAGEGAMMACORRECTED = 0x2,
-    rwIMAGEFLAGFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-// RwIm3DTransformFlags
-enum RwIm3DTransformFlags
-{
-    rwIM3D_VERTEXUV      = 1,
-    rwIM3D_ALLOPAQUE     = 2,
-    rwIM3D_NOCLIP        = 4,
-    rwIM3D_VERTEXXYZ     = 8,
-    rwIM3D_VERTEXRGBA    = 16,
-    rwIM3DTRANSFORMFLAGSFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-// RwCameraClearMode
-enum RwCameraClearMode
-{
-    rwCAMERACLEARIMAGE = 0x1,
-    rwCAMERACLEARZ = 0x2,
-    rwCAMERACLEARSTENCIL = 0x4,
-    rwCAMERACLEARMODEFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-// RwCameraProjection
-enum RwCameraProjection
-{
-    rwNACAMERAPROJECTION = 0,
-    rwPERSPECTIVE = 1,
-    rwPARALLEL = 2,
-    rwCAMERAPROJECTIONFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-// RwFrustumTestResult
-enum RwFrustumTestResult
-{
-    rwSPHEREOUTSIDE = 0,
-    rwSPHEREBOUNDARY = 1,
-    rwSPHEREINSIDE = 2,
-    rwFRUSTUMTESTRESULTFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-// rwD3D9VertexShaderEffectType
-enum rwD3D9VertexShaderEffectType
-{
-    rwD3D9VERTEXSHADEREFFECT_NONE = 0,
-    rwD3D9VERTEXSHADEREFFECT_BUMPMAP = 1,
-    rwD3D9VERTEXSHADEREFFECT_ENVMAP,
-    rwD3D9VERTEXSHADEREFFECT_BUMPENVMAP,
-    rwD3D9VERTEXSHADEREFFECT_DUAL,
-    rwD3D9VERTEXSHADEREFFECT_DUALREPLICATE,
-    rwD3D9VERTEXSHADEREFFECT_UVANIM,
-    rwD3D9VERTEXSHADEREFFECT_DUALUVANIM,
-    rwD3D9VERTEXSHADEREFFECT_NORMALMAP,
-    rwD3D9VERTEXSHADEREFFECT_NORMALENVMAP,
-    rwD3D9VERTEXSHADEREFFECT_CUBEMAP,
-    rwD3D9VERTEXSHADEREFFECT_BUMPCUBEMAP,
-    rwD3D9VERTEXSHADEREFFECT_MAX = (1 << 6),
-};
-// rwD3D9VertexShaderFogMode
-enum rwD3D9VertexShaderFogMode
-{
-    rwD3D9VERTEXSHADERFOG_NONE = 0,
-    rwD3D9VERTEXSHADERFOG_LINEAR = 1,
-    rwD3D9VERTEXSHADERFOG_EXP,
-    rwD3D9VERTEXSHADERFOG_EXP2,
-    rwD3D9VERTEXSHADERFOG_MAX
-};
-// RpMeshHeaderFlags
-enum RpMeshHeaderFlags
-{
-    rpMESHHEADERTRISTRIP  = 0x0001,
-    rpMESHHEADERTRIFAN    = 0x0002,
-    rpMESHHEADERLINELIST  = 0x0004,
-    rpMESHHEADERPOLYLINE  = 0x0008,
-    rpMESHHEADERPOINTLIST = 0x0010,
-    rpMESHHEADERPRIMMASK  = 0x00FF,
-    rpMESHHEADERUNINDEXED = 0x0100,
-    rpMESHHEADERFLAGSFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-// RpGeometryFlag
-enum RpGeometryFlag
-{
-    rpGEOMETRYTRISTRIP  = 0x00000001,
-    rpGEOMETRYPOSITIONS = 0x00000002,
-    rpGEOMETRYTEXTURED  = 0x00000004,
-    rpGEOMETRYPRELIT    = 0x00000008,
-    rpGEOMETRYNORMALS   = 0x00000010,
-    rpGEOMETRYLIGHT     = 0x00000020,
-    rpGEOMETRYMODULATEMATERIALCOLOR = 0x00000040,
-    rpGEOMETRYTEXTURED2 = 0x00000080,
-    rpGEOMETRYNATIVE            = 0x01000000,
-    rpGEOMETRYNATIVEINSTANCE    = 0x02000000,
-    rpGEOMETRYFLAGSMASK         = 0x000000FF,
-    rpGEOMETRYNATIVEFLAGSMASK   = 0x0F000000,
-    rpGEOMETRYFLAGFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-// RpGeometryLockMode
-enum RpGeometryLockMode
-{
-    rpGEOMETRYLOCKPOLYGONS   =   0x01,
-    rpGEOMETRYLOCKVERTICES   =   0x02,
-    rpGEOMETRYLOCKNORMALS    =   0x04,
-    rpGEOMETRYLOCKPRELIGHT   =   0x08,
-    rpGEOMETRYLOCKTEXCOORDS  =   0x10,
-    rpGEOMETRYLOCKTEXCOORDS1 =   0x10,
-    rpGEOMETRYLOCKTEXCOORDS2 =   0x20,
-    rpGEOMETRYLOCKTEXCOORDS3 =   0x40,
-    rpGEOMETRYLOCKTEXCOORDS4 =   0x80,
-    rpGEOMETRYLOCKTEXCOORDS5 = 0x0100,
-    rpGEOMETRYLOCKTEXCOORDS6 = 0x0200,
-    rpGEOMETRYLOCKTEXCOORDS7 = 0x0400,
-    rpGEOMETRYLOCKTEXCOORDS8 = 0x0800,
-    rpGEOMETRYLOCKTEXCOORDSALL = 0x0ff0,
-    rpGEOMETRYLOCKALL        = 0x0fff,
-    rpGEOMETRYLOCKMODEFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-// RpLightType
-enum RpLightType
-{
-    rpNALIGHTTYPE = 0,
-    rpLIGHTDIRECTIONAL,
-    rpLIGHTAMBIENT,
-    rpLIGHTPOINT = rpLIGHTPOSITIONINGSTART,
-    rpLIGHTSPOT,
-    rpLIGHTSPOTSOFT,
-    rpLIGHTTYPEFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-// RpLightFlag
-enum RpLightFlag
-{
-    rpLIGHTLIGHTATOMICS = 0x01,
-    rpLIGHTLIGHTWORLD = 0x02,
-    rpLIGHTFLAGFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-// rpLightPrivateFlag
-enum rpLightPrivateFlag
-{
-    rpLIGHTPRIVATENOCHROMA = 0x01,
-    rpLIGHTPRIVATEFLAGFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-// RpInterpolatorFlag
-enum RpInterpolatorFlag
-{
-    rpINTERPOLATORDIRTYINSTANCE = 0x01,
-    rpINTERPOLATORDIRTYSPHERE = 0x02,
-    rpINTERPOLATORNOFRAMEDIRTY = 0x04,
-    rpINTERPOLATORFLAGFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-// RpAtomicFlag
-enum RpAtomicFlag
-{
-    rpATOMICCOLLISIONTEST = 0x01,
-    rpATOMICRENDER = 0x04,
-    rpATOMICFLAGFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-// RpAtomicSetGeomFlag
-enum RpAtomicSetGeomFlag
-{
-    rpATOMICSAMEBOUNDINGSPHERE = 0x01,
-    rpATOMICSETGEOMFLAGFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-// RpAtomicPrivateFlag
-enum RpAtomicPrivateFlag
-{
-    rpATOMICPRIVATEWORLDBOUNDDIRTY = 0x01,
-    rpATOMICPRIVATEFLAGFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-// RpHAnimHierarchyFlag
-enum RpHAnimHierarchyFlag
-{
-    rpHANIMHIERARCHYSUBHIERARCHY =              0x01,
-    rpHANIMHIERARCHYNOMATRICES =                0x02,
-    rpHANIMHIERARCHYUPDATEMODELLINGMATRICES = 0x1000,
-    rpHANIMHIERARCHYUPDATELTMS =              0x2000,
-    rpHANIMHIERARCHYLOCALSPACEMATRICES =      0x4000,
-    rpHANIMHIERARCHYFLAGFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-// RpMatFXD3D9Pipeline
-enum RpMatFXD3D9Pipeline
-{
-    rpNAMATFXD3D9PIPELINE          = 0,
-    rpMATFXD3D9ATOMICPIPELINE      = 1,
-    rpMATFXD3D9WORLDSECTORPIPELINE = 2,
-    rpMATFXD3D9PIPELINEMAX,
-    rpMATFXD3D9PIPELINEFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-// RpMatFXMaterialFlags
-enum RpMatFXMaterialFlags
-{
-    rpMATFXEFFECTNULL            = 0,
-    rpMATFXEFFECTBUMPMAP         = 1,
-    rpMATFXEFFECTENVMAP          = 2,
-    rpMATFXEFFECTBUMPENVMAP      = 3,
-    rpMATFXEFFECTDUAL            = 4,
-    rpMATFXEFFECTUVTRANSFORM     = 5,
-    rpMATFXEFFECTDUALUVTRANSFORM = 6,
-    rpMATFXEFFECTMAX,
-    rpMATFXNUMEFFECTS       = rpMATFXEFFECTMAX - 1,
-    rpMATFXFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-// RpWorldPrivateFlag
-enum RpWorldPrivateFlag
-{
-    rpWORLDSINGLEMALLOC = 0x01,
-    rpWORLDPRIVATEFLAGFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-// RpWorldFlag
-enum RpWorldFlag
-{
-    rpWORLDTRISTRIP  = 0x01,
-    rpWORLDPOSITIONS = 0x02,
-    rpWORLDTEXTURED  = 0x04,
-    rpWORLDPRELIT    = 0x08,
-    rpWORLDNORMALS   = 0x10,
-    rpWORLDLIGHT     = 0x20,
-    rpWORLDMODULATEMATERIALCOLOR = 0x40, 
-    rpWORLDTEXTURED2 = 0x80,
-    rpWORLDNATIVE               = 0x01000000,
-    rpWORLDNATIVEINSTANCE       = 0x02000000,
-    rpWORLDFLAGSMASK            = 0x000000FF,
-    rpWORLDNATIVEFLAGSMASK      = 0x0F000000,
-    rpWORLDSECTORSOVERLAP       = 0x40000000,
-    rpWORLDFLAGFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-// RpWorldRenderOrder
-enum RpWorldRenderOrder
-{
-    rpWORLDRENDERNARENDERORDER = 0,
-    rpWORLDRENDERFRONT2BACK,
-    rpWORLDRENDERBACK2FRONT,
-    rpWORLDRENDERORDERFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-// RpD3D9GeometryUsageFlag
-enum RpD3D9GeometryUsageFlag
-{
-    rpD3D9GEOMETRYUSAGE_DYNAMICPOSITIONS  =     0x02,
-    rpD3D9GEOMETRYUSAGE_DYNAMICNORMALS    =     0x04,
-    rpD3D9GEOMETRYUSAGE_DYNAMICPRELIT     =     0x08,
-    rpD3D9GEOMETRYUSAGE_DYNAMICTEXCOORDS  =     0x10,
-    rpD3D9GEOMETRYUSAGE_DYNAMICTEXCOORDS1 =     0x10,
-    rpD3D9GEOMETRYUSAGE_DYNAMICTEXCOORDS2 =     0x20,
-    rpD3D9GEOMETRYUSAGE_DYNAMICTEXCOORDS3 =     0x40,
-    rpD3D9GEOMETRYUSAGE_DYNAMICTEXCOORDS4 =     0x80,
-    rpD3D9GEOMETRYUSAGE_DYNAMICTEXCOORDS5 =   0x0100,
-    rpD3D9GEOMETRYUSAGE_DYNAMICTEXCOORDS6 =   0x0200,
-    rpD3D9GEOMETRYUSAGE_DYNAMICTEXCOORDS7 =   0x0400,
-    rpD3D9GEOMETRYUSAGE_DYNAMICTEXCOORDS8 =   0x0800,
-    rpD3D9GEOMETRYUSAGE_DYNAMICTEXCOORDSALL = 0x0ff0,
-    rpD3D9GEOMETRYUSAGE_DYNAMICMASK       =   0x0fff,
-    rpD3D9GEOMETRYUSAGE_CREATETANGENTS    =  0x10000,
-    rpD3D9GEOMETRYUSAGEFLAGFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
-};
-// RpD3D9WorldSectorUsageFlag
-enum RpD3D9WorldSectorUsageFlag
-{
-    rpD3D9WORLDSECTORUSAGE_CREATETANGENTS    =  0x10000,
-    rpD3D9WORLDSECTORUSAGEFLAGFORCEENUMSIZEINT = RWFORCEENUMSIZEINT
+    int format;  /* Compression flags and number of texture coord sets */
+    int numTriangles;
+    int numVertices;
+    int numMorphTargets;
 };
 
 /******************************************Functions****************************************
 deleted.
 
  *******************************************************************************************/
+// VECTOR
+#define RwV3dTransformPoint(pointOut, pointIn, transformMatrix) ((void (__cdecl *)(RwV3d *, RwV3d *, RwMatrixTag *))0x7EDD60)(pointOut, pointIn, transformMatrix)
+
+// CLUMP
+#define RpClumpRender(clump) ((float (__cdecl *)(RpClump *))0x749B20)(clump)
+#define RpClumpForAllAtomics(clump, callback, data) ((void (__cdecl *)(RpClump *, void *, void *))0x749B70)(clump, callback, data)
+
 // TEXTURE
 #define RwTextureRegisterPlugin(size, pluginId, ctor, dtor, copy) ((int (__cdecl *)(int, int, void *, void *, void *))0x7F3BB0)(size, pluginId, ctor, dtor, copy)
 #define RpAnisotPluginAttach() ((signed int (__cdecl *)())0x748F70)()
-#define RwStreamFindChunk(stream, type, lengthOut, versionOut) ((int (__cdecl *)(RwStream *, int, int *, int *))0x7ED2D0)(stream, type, lengthOut, versionOut)
+#define RwStreamFindChunk(stream, type, lengthOut, versionOut) ((unsigned int (__cdecl *)(RwStream *, unsigned int, unsigned int *, unsigned int *))0x7ED2D0)(stream, type, lengthOut, versionOut)
 #define RwTexDictionaryCreate() ((RwTexDictionary *(__cdecl *)())0x7F3600)()
 #define readTextureNative(stream) ((RwTexture *(__cdecl *)(RwStream *))0x730E60)(stream)
 #define RwTexDictionaryAddTexture(dict, texture) ((RwTexture *(__cdecl *)(RwTexDictionary *, RwTexture *))0x7F3980)(dict, texture)
 #define RwTexDictionaryForAllTextures(dict, callback, data) ((RwTexDictionary *(__cdecl *)(RwTexDictionary *, void *, void *))0x7F3730)(dict, callback, data)
 #define RwTexDictionaryDestroy(dict) ((int (__cdecl *)(RwTexDictionary *))0x7F36A0)(dict)
 #define RwTexDictionaryFindNamedTexture(dict, name) ((RwTexture *(__cdecl *)(RwTexDictionary *, char *))0x7F39F0)(dict, name)
+#define RwTextureSetName(texture, name) ((void (__cdecl *)(RwTexture *, char *))0x7F38A0)(texture, name)
+#define RwTextureSetMaskName(texture, name) ((void (__cdecl *)(RwTexture *, char *))0x7F3910)(texture, name)
+
 // STREAM
 #define RwStreamReadReal(stream, buffer, length) ((RwStream *(__cdecl *)(RwStream *, void *, unsigned int))0x7ED4F0)(stream, buffer, length)
-#define RwStreamRead(stream, space, size) ((int (__cdecl *)(RwStream *, void *, unsigned int))0x7EC9D0)(stream, space, size)
+#define RwStreamRead(stream, space, size) ((unsigned int (__cdecl *)(RwStream *, void *, unsigned int))0x7EC9D0)(stream, space, size)
 // GEOMETRY
 #define RpGeometryCreate(numVerts, numTriangles, format) ((RpGeometry *(__cdecl *)(int, int, unsigned int))0x74CA90)(numVerts, numTriangles, format)
 
@@ -2068,15 +2115,23 @@ deleted.
 #define RwFrameRotate(frame, axis, angle, combine) ((void (__cdecl *)(RwFrame *, RwV3d *, float, int))0x7F1010)(frame, axis, angle, combine)
 #define RwFrameTranslate(frame, pos, combine) ((void (__cdecl *)(RwFrame *, RwV3d *, int))0x7F0E30)(frame, pos, combine)
 #define RwFrameUpdateObjects(frame) ((RwFrame *(__cdecl *)(RwFrame *))0x7F0910)(frame)
+#define RwFrameRegisterPlugin(size, pluginId, ctor, dtor, copy) ((int (__cdecl *)(int, int, void *, void *, void *))0x7F1260)(size, pluginId, ctor, dtor, copy)
+#define RwFrameForAllObjects(frame, callback, data) ((RwFrame *(__cdecl *)(RwFrame *, void *, void *))0x7F1200)(frame, callback, data)
 
 // GEOMETRY
 #define RpGeometryStreamRead(version) ((RpGeometry *(__cdecl *)(unsigned int))0x74D190)(version)
+#define RpGeometryForAllMaterials(geometry, callback, data) ((void (__cdecl *)(RpGeometry *, void *, void *))0x74C790)(geometry, callback, data)
+
 // D3D9
 #define rwD3D9EnableClippingIfNeeded(object, type) ((int (__cdecl *)(RpAtomic *, int))0x756D90)(object, type)
 #define rwD3D9GetRenderState(state, value) ((int (__cdecl *)(int, void *))0x7FC320)(state, value)
 #define RpD3D9GeometryGetUsageFlags(geometry) ((unsigned int (__cdecl *)(RpGeometry *))0x7588D0)(geometry)
 #define RpD3D9GeometrySetUsageFlags(geometry, flags) ((unsigned int (__cdecl *)(RpGeometry *, unsigned int))0x7588B0)(geometry, flags)
 #define rwD3D9RenderStateFlushCache() ((int (__cdecl *)()) 0x7FC200)()
+#define rwD3D9CheckValidTextureFormat(format) ((bool (__cdecl *)(D3DFORMAT)) 0x4CBDE0)(format)
+#define rwD3D9CheckAutoMipmapGenTextureFormat(format) ((bool (__cdecl *)(D3DFORMAT)) 0x4CBF80)(format)
+#define rwD3D9CheckAutoMipmapGenCubeTextureFormat(format) ((bool (__cdecl *)(D3DFORMAT)) 0x4CC020)(format)
+#define rwD3D9CheckValidZBufferTextureFormat(format) ((bool (__cdecl *)(D3DFORMAT)) 0x4CBE80)(format)
 
 // VEHICLE PIPE RENDER
 #define rwD3D9SetTexture(texture, stage) ((int (__cdecl *)(RwTexture *, int))0x7FDE70)(texture, stage)
@@ -2098,6 +2153,7 @@ deleted.
 #define rwD3D9VSGetWorldNormalizedTransposeMatrix(m_out) ((D3DXMATRIX *(__cdecl *)(D3DXMATRIX *))0x764C60)(m_out)
 #define rwD3D9VSGetWorldViewTransposedMatrix(m_out) ((D3DXMATRIX *(__cdecl *)(D3DXMATRIX *))0x764730)(m_out)
 #define rwD3D9SetRenderState(state, value) ((int (__cdecl *)(int, int))0x7FC2D0)(state, value)
+#define rwD3D9RWSetRasterStage(raster, stage) ((int (__cdecl *)(RwRaster *, int))0x7FDCD0)(raster, stage)
 // CAMERA
 #define RsCameraShowRaster(camera) ((int (__cdecl *)(RwCamera *))0x619440)(camera)
 #define RwCameraEndUpdate(camera) ((RwCamera *(__cdecl *)(RwCamera *))0x7EE180)(camera)
@@ -2119,17 +2175,71 @@ deleted.
 //RASTER
 #define RwRasterCreate(width, height, depth, flags) ((RwRaster *(__cdecl *)(int, int, int, int))0x7FB230)(width, height, depth, flags)
 #define RwRasterDestroy(raster) ((void (__cdecl *)(RwRaster *))0x7FB020)(raster)
+#define RwRasterRenderFast(raster, x, y) ((RwRaster * (__cdecl *)(RwRaster *, int, int))0x7FAF50)(raster, x, y)
+#define RwRasterPushContext(raster) ((RwRaster * (__cdecl *)(RwRaster *))0x7FB060)(raster)
+#define RwRasterPopContext() ((RwRaster * (__cdecl *)())0x7FB110)()
+#define RenderStatesSave() ((void (__cdecl *)())0x700CC0)()
+#define RenderStatesSetHSL() ((void (__cdecl *)())0x700D70)()
+#define RenderStatesReset() ((void (__cdecl *)())0x700E00)()
 
 //MATRIX
 #define RwMatrixUpdate(matrix) ((RwMatrixTag *(__cdecl *)(RwMatrixTag *)) 0x7F18A0)(matrix)
+#define RwMatrixMultiply(result, left, right) ((RwMatrixTag *(__cdecl *)(RwMatrixTag *, RwMatrixTag *, RwMatrixTag *)) 0x7F18B0)(result, left, right)
+#define RwMatrixRotate(matrix, axis, angle, combineOp) ((RwMatrixTag *(__cdecl *)(RwMatrixTag *, RwV3d *, float, int)) 0x7F1FD0)(matrix, axis, angle, combineOp);
+#define RwMatrixInvert(out, in) ((RwMatrixTag *(__cdecl *)(RwMatrixTag *, RwMatrixTag *)) 0x7F2070)(out, in)
+#define RwMatrixScale(matrix, scale, combineOp) ((RwMatrixTag *(__cdecl *)(RwMatrixTag *, RwV3d *, int)) 0x7F22C0)(matrix, scale, combineOp)
 
 // globals
 #define RwEngineInstance (*(RwGlobals **)0xC97B24)
 
-#define RtPNGImageRead(path) ((RwImage *(__cdecl *)(char *))0x7CF9B0)(path)
+#define RtPNGImageRead(path) ((RwImage *(__cdecl *)(const char *))0x7CF9B0)(path)
 #define RwImageFindRasterFormat(image, rasterType, width, height, depth, format) ((RwImage *(__cdecl *)(RwImage *, unsigned int, unsigned int *, \
 	unsigned int *, unsigned int *, unsigned int *))0x8042C0)(image, rasterType, width, height, depth, format)
 #define RwRasterSetFromImage(raster, image) ((RwRaster *(__cdecl *)(RwRaster *, RwImage *))0x804290)(raster, image)
 #define RwImageDestroy(image) ((bool (__cdecl *)(RwImage *))0x802740)(image)
 #define RwTextureCreate(raster) ((RwTexture *(__cdecl *)(RwRaster *))0x7F37C0)(raster)
 #define RwTextureDestroy(texture) ((unsigned int (__cdecl *)(RwTexture *))0x7F3820)(texture)
+
+// MATERIAL
+#define RpMaterialUVAnimExists(material) ((unsigned int (__cdecl *)(RpMaterial *))0x7CC530)(material)
+#define RpMaterialUVAnimAddAnimTime(material, time) ((unsigned int (__cdecl *)(RpMaterial *, float))0x7CC4B0)(material, time)
+#define RpMaterialUVAnimApplyUpdate(material) ((unsigned int (__cdecl *)(RpMaterial *))0x7CC110)(material)
+
+// RPHANIM
+#define RpHAnimIDGetIndex(hierarchy, id) ((unsigned int (__cdecl *)(RpHAnimHierarchy *, unsigned int))0x7C51A0)(hierarchy, id)
+#define RpHAnimHierarchyGetMatrixArray(hierarchy) ((RwMatrixTag *(__cdecl *)(RpHAnimHierarchy *))0x7C5120)(hierarchy)
+
+// RWIM3D
+#define RwIm3DEnd() ((void (__cdecl *)())0x7EF520)()
+#define RwIm3DTransform(pVerts, numVerts, ltm, flags) ((RxObjSpace3DVertex *(__cdecl *)(RxObjSpace3DVertex *, unsigned int, RwMatrixTag *, unsigned int))0x7EF450)(pVerts, numVerts, ltm, flags)
+#define RwIm3DRenderIndexedPrimitive(primType, indices, numIndices) ((void (__cdecl *)(int, __int16 *, int))0x7EF550)(primType, indices, numIndices)
+
+// QUAT
+#define RtQuatRotate(quat, axis, angle, combineOp) ((void (__cdecl *)(RtQuat *, RwV3d *, float, int))0x7EB7C0)(quat, axis, angle, combineOp)
+
+// BMP
+#define RtBMPImageRead(path) ((RwImage *(__cdecl *)(char *))0x7CDF60)(path)
+
+// IMAGE
+#define RwImageApplyMask(image, mask) ((RwImage *(__cdecl *)(RwImage *, RwImage *))0x802AF0)(image, mask)
+#define RwImageMakeMask(image) ((RwImage *(__cdecl *)(RwImage *))0x802A20)(image)
+
+// DDS
+#define RwD3D9DDSTextureRead(path) ((RwTexture *(__cdecl *)(char *))0x820A10)(path)
+
+#define gtaD3D9TexCreate(width, height, numLevels, d3dFormat, texture) ((HRESULT (__cdecl *)(int, int, unsigned int, D3DFORMAT, IDirect3DTexture9 **))0x730510)(width, height, numLevels, d3dFormat, texture)
+#define RwD3D9RasterCreate(width, height, d3dFormat, rasterFormat) ((RwRaster *(__cdecl *)(int, int, D3DFORMAT, unsigned int))0x4CD050)(width, height, d3dFormat, rasterFormat)
+
+#define RwRasterLockPalette(raster, lockMode) ((char *(__cdecl *)(RwRaster *, unsigned int))0x7FB0E0)(raster, lockMode)
+#define RwRasterUnlockPalette(raster) ((char *(__cdecl *)(RwRaster *))0x7FAFF0)(raster)
+#define RwRasterLock(raster, level, lockMode) ((char *(__cdecl *)(RwRaster *, unsigned int, unsigned int))0x7FB2D0)(raster, level, lockMode)
+#define RwRasterUnlock(raster) ((char *(__cdecl *)(RwRaster *))0x7FAEC0)(raster)
+#define RwRasterRegisterPlugin(size, pluginId, ctor, dtor, copy) ((int (__cdecl *)(int, int, void *, void *, void *))0x7FB0B0)(size, pluginId, ctor, dtor, copy)
+
+#define RwD3D9DeviceCaps ((D3DCAPS9 *)0xC9BF00)
+
+#define RwD3DDevice (*(IDirect3DDevice9 **)0xC97C28)
+
+#define RsGlobal ((RsGlobalType *)0xC17040)
+
+#define _RwGameCamera    (*(RwCamera**)0xC1703C)

@@ -1,30 +1,39 @@
 #pragma once
 
-#include "plugin\plugin.h"
+#include <plugin/plugin.h>
+#include "CVector2D.h"
 
-#pragma pack(push, 1)
+/* CRect class describes a rectangle.
+
+	A(left;top)_____________________
+	|                               |
+	|                               |
+	|                               |
+	|_________________B(right;bottom)
+	
+*/
+
+#pragma pack(push, 4)
 class PLUGIN_API CRect
 {
 public:
-	float x1;
-	float y1;
-	float x2;
-	float y2;
+	float m_fLeft;          // x1
+	float m_fBottom;        // y1
+	float m_fRight;         // x2
+	float m_fTop;           // y2
 
-	inline CRect(float _x1, float _y1, float _x2, float _y2)
-	{
-		x1 = _x1;
-		y1 = _y1;
-		x2 = _x1;
-		y2 = _y1;
-	}
+	CRect(float left, float top, float right, float bottom);
+	CRect();
 
-	inline CRect()
-	{
-		x1 = 1000000.0;
-		y1 = -1000000.0;
-		x2 = -1000000.0;
-		y2 = 1000000.0;
-	}
+	bool IsFlipped();
+	void Restrict(CRect const& restriction);
+	void Resize(float resizeX, float resizeY);
+	bool IsPointInside(CVector2D const& point);
+	bool IsCircleInside(CVector2D const& circleCenter, float circleRadius);
+	void SetFromCenter(float x, float y, float size);
+	void GetCenter(float *x, float *y);
+	void StretchToPoint(float x, float y);
 };
 #pragma pack(pop)
+
+VALIDATE_SIZE(CRect, 0x10);

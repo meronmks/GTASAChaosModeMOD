@@ -1,12 +1,14 @@
 #pragma once
 #include <Windows.h>
-#include <list>
+#include "SA Plugin SDK/game_sa/eWeaponType.h"
+#include <vector>
+
 
 class Actor
 {
 private:
 	//s–¯‚È‚Ç‚ğŠi”[‚µ‚Ä‚¨‚­List
-	std::list<DWORD> ActorArray;
+	std::vector<DWORD> ActorArray;
 public:
 	Actor();
 	~Actor();
@@ -15,7 +17,7 @@ public:
 	//List“à‚É‚¢‚éActor‚ªg—p‰Â”\‚©’²‚×‚é
 	void CheckDefinedActor();
 	//s–¯‚É•Ší‚ğ‚½‚¹‚é;
-	void GiveWeapon();
+	void GiveWeapon(DWORD actor, eWeaponType weaponType, unsigned int ammo, bool likeUnused);
 	//s–¯‚ğ•‘•‚³‚¹‚é
 	void ActorArmament();
 };

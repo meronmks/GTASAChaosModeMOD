@@ -2,5 +2,6 @@
 *.pdb
 *.log
 GTASAChaosModeMOD/Debug/
+GTASAChaosModeMOD/SA Plugin SDK/
 Debug/
 *.sdf

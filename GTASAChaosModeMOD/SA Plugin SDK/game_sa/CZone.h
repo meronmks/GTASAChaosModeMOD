@@ -1,5 +1,5 @@
 #pragma once
-#include "plugin\plugin.h"
+#include <plugin/plugin.h>
 
 enum eZoneType
 {
