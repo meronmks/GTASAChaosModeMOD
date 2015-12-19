@@ -11,41 +11,6 @@ Actor::~Actor()
 {
 }
 
-void Actor::GetActor()
-{
-	auto actorPointer = *((CPed **)0xB74490);
-	if (actorPointer == 0)return;
-	actorPointer += 0x4;
-	for (DWORD i = 0; i < 35584; i += 0x100)
-	{
-		DWORD actor = *((DWORD *)actorPointer);	//市民取得
-		actorPointer += 0x1;	//ポインタの位置ずらし
-		if (0x80 > actor && actor >= 0x00)
-		{
-			actor += i;
-			if (*((DWORD *)actor) > 0)
-			{
-				ActorArray.push_back(actor);
-			}
-		}
-	}
-}
-
-void Actor::CheckDefinedActor()
-{
-	auto iterator = ActorArray.begin(); // イテレータ
-	while (iterator != ActorArray.end())
-	{
-		if (*iterator > 0)
-		{
-			ActorArray.erase(iterator);	//削除
-			iterator = ActorArray.begin(); // イテレータの更新
-		}
-		++iterator;  // イテレータを１つ進める
-	}
-}
-
-
 void Actor::ActorArmament()
 {
 	//乱数生成準備
@@ -56,10 +21,47 @@ void Actor::ActorArmament()
 	auto pedCount = CPools::ms_pPedPool->m_Size;
 	for (int i = 0; i < pedCount; i++)
 	{
-		if (30 <= rand100(mt)) continue;
+		if (45 < rand100(mt)) continue;
 		auto ped = CPools::ms_pPedPool->GetAt(i);
 		if (ped == NULL || ped->IsPlayer()) return;
-		ped->GiveWeapon(WEAPON_RLAUNCHER, 9999, true);
-		//ToDo::市民に武器をもたせる方法を調べる
+		auto weapon = GiveRandomWeapon();
+		if (!ped->DoWeHaveWeaponAvailable(weapon))
+		{
+			ped->ClearWeapons();
+			ped->GiveWeapon(weapon, 9999, false);
+			ped->SetCurrentWeapon(weapon);
+		}
+	}
+}
+
+eWeaponType Actor::GiveRandomWeapon()
+{
+	std::random_device rnd;
+	std::mt19937 mt(rnd());
+	std::uniform_int_distribution<> rand100(0, 500);
+	switch (rand100(mt) % 11)
+	{
+	case 0:
+		return WEAPON_RLAUNCHER;
+	case 1:
+		return WEAPON_M4;
+	case 2:
+		return WEAPON_BASEBALLBAT;
+	case 3:
+		return WEAPON_DESERT_EAGLE;
+	case 4:
+		return WEAPON_MICRO_UZI;
+	case 5:
+		return WEAPON_TEC9;
+	case 6:
+		return WEAPON_MINIGUN;
+	case 7:
+		return WEAPON_RLAUNCHER_HS;
+	case 8:
+		return WEAPON_SNIPERRIFLE;
+	case 9:
+		return WEAPON_MICRO_UZI;
+	default:
+		return WEAPON_RLAUNCHER;
 	}
 }

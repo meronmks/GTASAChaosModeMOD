@@ -7,17 +7,11 @@
 class Actor
 {
 private:
-	//s–¯‚È‚Ç‚ğŠi”[‚µ‚Ä‚¨‚­List
-	std::vector<DWORD> ActorArray;
+	//ƒ‰ƒ“ƒ_ƒ€‚È•Ší‚ğ‘I‘ğ‚·‚é
+	eWeaponType GiveRandomWeapon();
 public:
 	Actor();
 	~Actor();
-	//Actor‚ğList‚ÖŠi”[
-	void GetActor();
-	//List“à‚É‚¢‚éActor‚ªg—p‰Â”\‚©’²‚×‚é
-	void CheckDefinedActor();
-	//s–¯‚É•Ší‚ğ‚½‚¹‚é;
-	void GiveWeapon(DWORD actor, eWeaponType weaponType, unsigned int ammo, bool likeUnused);
 	//s–¯‚ğ•‘•‚³‚¹‚é
 	void ActorArmament();
 };
