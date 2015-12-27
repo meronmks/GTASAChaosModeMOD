@@ -11,93 +11,125 @@ Actor::~Actor()
 
 void Actor::ActorArmament()
 {
-	//乱数生成準備
-	std::random_device rnd;
-	std::mt19937 mt(rnd());
-	std::uniform_int_distribution<> rand100(0, 100);
 	if (CPools::ms_pPedPool == NULL) return;
 	auto pedCount = CPools::ms_pPedPool->m_Size;
 	for (int i = 0; i < pedCount; i++)
 	{
-		if (40 < rand100(mt)) continue;
 		auto ped = CPools::ms_pPedPool->GetAt(i);
-		if (ped == NULL || ped->IsPlayer()) return;
-		eWeaponType weapon;
+		if (ped == NULL || ped->IsPlayer() || !ped->IsAlive()) continue;
+		if(ped->m_nActiveWeaponSlot == 0)
+		{
+			GiveRandomWeapon(ped);
+			continue;
+		}
+		//乱数生成準備
+		std::random_device rnd;
+		std::mt19937 mt(rnd());
+		std::uniform_int_distribution<> rand100(0, 100);
+		if (10 < rand100(mt)) continue;
 		if (ped->m_pedState == PEDSTATE_DRIVING)
 		{
-			weapon = GiveRandomDriveByWeapon();
+			 GiveRandomDriveByWeapon(ped);
 		}
 		else
 		{
-			weapon = GiveRandomWeapon();
-		}
-		if (!ped->DoWeHaveWeaponAvailable(weapon))
-		{
-			ped->ClearWeapons();
-			ped->GiveWeapon(weapon, 9999, false);
-			ped->SetCurrentWeapon(weapon);
+			 GiveRandomWeapon(ped);
 		}
 	}
 }
 
-eWeaponType Actor::GiveRandomWeapon()
+void Actor::GiveRandomWeapon(CPed* ped)
 {
 	std::random_device rnd;
 	std::mt19937 mt(rnd());
 	std::uniform_int_distribution<> rand100(0, 500);
-	switch (rand100(mt) % 16)
+	eWeaponType weapon;
+	switch (rand100(mt) % 14)
 	{
 	case 0:
-		return WEAPON_RLAUNCHER;
+		weapon =  WEAPON_RLAUNCHER;
+		break;
 	case 1:
-		return WEAPON_M4;
+		weapon = WEAPON_M4;
+		break;
 	case 2:
-		return WEAPON_BASEBALLBAT;
+		weapon = WEAPON_BASEBALLBAT;
+		break;
 	case 3:
-		return WEAPON_DESERT_EAGLE;
+		weapon = WEAPON_DESERT_EAGLE;
+		break;
 	case 4:
-		return WEAPON_MICRO_UZI;
+		weapon = WEAPON_MICRO_UZI;
+		break;
 	case 5:
-		return WEAPON_TEC9;
+		weapon = WEAPON_TEC9;
+		break;
 	case 6:
-		return WEAPON_MINIGUN;
+		weapon = WEAPON_MINIGUN;
+		break;
 	case 7:
-		return WEAPON_RLAUNCHER_HS;
+		weapon = WEAPON_RLAUNCHER_HS;
+		break;
 	case 8:
-		return WEAPON_SNIPERRIFLE;
+		weapon = WEAPON_SNIPERRIFLE;
+		break;
 	case 9:
-		return WEAPON_MOLOTOV;
+		weapon = WEAPON_MOLOTOV;
+		break;
 	case 10:
-		return WEAPON_GRENADE;
+		weapon = WEAPON_GRENADE;
+		break;
 	case 11:
-		return WEAPON_CHAINSAW;
+		weapon = WEAPON_CHAINSAW;
+		break;
 	case 12:
-		return WEAPON_SAWNOFF;
+		weapon = WEAPON_SAWNOFF;
+		break;
 	case 13:
-		return WEAPON_MP5;
+		weapon = WEAPON_MP5;
+		break;
 	case 14:
-		return WEAPON_KNIFE;
+		weapon = WEAPON_KNIFE;
+		break;
 	default:
-		return WEAPON_RLAUNCHER;
+		weapon = WEAPON_RLAUNCHER;
+		break;
 	}
+	CurrentWeapon(ped, weapon);
 }
 
-eWeaponType Actor::GiveRandomDriveByWeapon()
+void Actor::GiveRandomDriveByWeapon(CPed* ped)
 {
 	std::random_device rnd;
 	std::mt19937 mt(rnd());
 	std::uniform_int_distribution<> rand100(0, 500);
+	eWeaponType weapon;
 	switch (rand100(mt) % 4)
 	{
 	case 0:
-		return WEAPON_MICRO_UZI;
+		weapon = WEAPON_MICRO_UZI;
+		break;
 	case 1:
-		return WEAPON_TEC9;
+		weapon = WEAPON_TEC9;
+		break;
 	case 2:
-		return WEAPON_SNIPERRIFLE;
+		weapon = WEAPON_SNIPERRIFLE;
+		break;
 	case 3:
-		return WEAPON_MP5;
+		weapon = WEAPON_MP5;
+		break;
 	default:
-		return WEAPON_MICRO_UZI;
+		weapon = WEAPON_MICRO_UZI;
+		break;
+	}
+	CurrentWeapon(ped, weapon);
+}
+
+void Actor::CurrentWeapon(CPed* ped, eWeaponType weapon)
+{
+	if (!ped->DoWeHaveWeaponAvailable(weapon)) {	//フリーズ回避
+		ped->ClearWeapons();
+		ped->GiveWeapon(weapon, 9999, true);
+		ped->SetCurrentWeapon(weapon);
 	}
 }

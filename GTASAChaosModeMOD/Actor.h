@@ -11,9 +11,11 @@ class Actor
 {
 private:
 	//ランダムな武器を選択する
-	eWeaponType GiveRandomWeapon();
+	void GiveRandomWeapon(CPed*);
 	//ランダムに市民がドライブバイ可能な武器を選択する
-	eWeaponType GiveRandomDriveByWeapon();
+	void GiveRandomDriveByWeapon(CPed*);
+	//武器を装備させる
+	void CurrentWeapon(CPed*, eWeaponType);
 public:
 	Actor();
 	~Actor();

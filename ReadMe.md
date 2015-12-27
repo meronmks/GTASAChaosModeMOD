@@ -10,7 +10,7 @@ MIT Licenseで一応公開します。
 ### 今後の課題
 市民をカオス化させること  
 起動コマンド作る（現状強制起動）  
-
+SetCurrentWeapon()でフリーズする原因を探る
 
 ### 使用環境および使用ライブラリ
 Visual Studio 2015 Community  
