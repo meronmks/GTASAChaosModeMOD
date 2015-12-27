@@ -1,18 +1,18 @@
-#include <windows.h>
+ï»¿#include <windows.h>
 #include "Actor.h"
 
-BOOL isGameRunning;	//GTASA‚ª‹N“®‚µ‚Ä‚¢‚é‚©‚Ç‚¤‚©‚Ì”»’è•Ï”
-Actor actors;	//ActorŠÖ˜A
+BOOL isGameRunning;	//GTASAãŒèµ·å‹•ã—ã¦ã„ã‚‹ã‹ã©ã†ã‹ã®åˆ¤å®šå¤‰æ•°
+Actor actors;	//Actoré–¢é€£
 
-//‚±‚±‚ÉƒJƒIƒXˆ—ƒƒCƒ“‚ÅŒÄ‚Ño‚µ‚½‚¢‚à‚Ì‚ğ‘S•”‘‚­
+//ã“ã“ã«ã‚«ã‚ªã‚¹å‡¦ç†ãƒ¡ã‚¤ãƒ³ã§å‘¼ã³å‡ºã—ãŸã„ã‚‚ã®ã‚’å…¨éƒ¨æ›¸ã
 DWORD WINAPI ScriptMain(void *parameter)
 {
 	while (isGameRunning)
 	{
 		actors.ActorArmament();
-		Sleep(250);	//ƒtƒŠ[ƒY‰ñ”ğ—p
+		Sleep(250);	//ãƒ•ãƒªãƒ¼ã‚ºå›é¿ç”¨
 	}
-	ExitThread(0);	//ƒXƒŒƒbƒhI—¹’Ê’m
+	ExitThread(0);	//ã‚¹ãƒ¬ãƒƒãƒ‰çµ‚äº†é€šçŸ¥
 }
 
 int WINAPI DllMain(HINSTANCE hInst, DWORD fdReason, PVOID pvReserved)

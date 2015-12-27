@@ -1,4 +1,4 @@
-#include "Player.h"
+ï»¿#include "Player.h"
 
 Player::Player()
 {
@@ -19,7 +19,7 @@ DWORD Player::getPlayer(){
 
 BOOL Player::playerAlive() {
 	DWORD player = getPlayer();
-	DWORD PlayerStatus; //ƒvƒŒƒCƒ„[‚ÌŒ»İ‚Ìó‘Ô
+	DWORD PlayerStatus; //ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ç¾åœ¨ã®çŠ¶æ…‹
 	if (player != 0) {
 		player += 0x530;
 		PlayerStatus = *((DWORD *)player);
@@ -27,5 +27,5 @@ BOOL Player::playerAlive() {
 			return false;
 		}
 	}
-	return true; //‘¶İ‚µ‚È‚¢ê‡‚Í€‚ñ‚Å‚È‚¢ˆµ‚¢
+	return true; //å­˜åœ¨ã—ãªã„å ´åˆã¯æ­»ã‚“ã§ãªã„æ‰±ã„
 }

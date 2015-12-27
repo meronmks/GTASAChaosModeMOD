@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <Windows.h>
 #include "SA Plugin SDK/game_sa/eWeaponType.h"
 #include "SA Plugin SDK/game_sa/CPools.h"
@@ -10,14 +10,14 @@
 class Actor
 {
 private:
-	//ƒ‰ƒ“ƒ_ƒ€‚È•Ší‚ğ‘I‘ğ‚·‚é
+	//ãƒ©ãƒ³ãƒ€ãƒ ãªæ­¦å™¨ã‚’é¸æŠã™ã‚‹
 	eWeaponType GiveRandomWeapon();
-	//ƒ‰ƒ“ƒ_ƒ€‚És–¯‚ªƒhƒ‰ƒCƒuƒoƒC‰Â”\‚È•Ší‚ğ‘I‘ğ‚·‚é
+	//ãƒ©ãƒ³ãƒ€ãƒ ã«å¸‚æ°‘ãŒãƒ‰ãƒ©ã‚¤ãƒ–ãƒã‚¤å¯èƒ½ãªæ­¦å™¨ã‚’é¸æŠã™ã‚‹
 	eWeaponType GiveRandomDriveByWeapon();
 public:
 	Actor();
 	~Actor();
-	//s–¯‚ğ•‘•‚³‚¹‚é
+	//å¸‚æ°‘ã‚’æ­¦è£…ã•ã›ã‚‹
 	void ActorArmament();
 };
 

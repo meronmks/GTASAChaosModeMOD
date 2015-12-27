@@ -1,4 +1,4 @@
-#include "Actor.h"
+ï»¿#include "Actor.h"
 
 Actor::Actor()
 {
@@ -11,7 +11,7 @@ Actor::~Actor()
 
 void Actor::ActorArmament()
 {
-	//—”¶¬€”õ
+	//ä¹±æ•°ç”Ÿæˆæº–å‚™
 	std::random_device rnd;
 	std::mt19937 mt(rnd());
 	std::uniform_int_distribution<> rand100(0, 100);
@@ -23,10 +23,11 @@ void Actor::ActorArmament()
 		auto ped = CPools::ms_pPedPool->GetAt(i);
 		if (ped == NULL || ped->IsPlayer()) return;
 		eWeaponType weapon;
-		if(ped->m_pedState == PEDSTATE_DRIVING)
+		if (ped->m_pedState == PEDSTATE_DRIVING)
 		{
 			weapon = GiveRandomDriveByWeapon();
-		}else
+		}
+		else
 		{
 			weapon = GiveRandomWeapon();
 		}
@@ -86,7 +87,7 @@ eWeaponType Actor::GiveRandomDriveByWeapon()
 	std::random_device rnd;
 	std::mt19937 mt(rnd());
 	std::uniform_int_distribution<> rand100(0, 500);
-	switch (rand100(mt) % 17)
+	switch (rand100(mt) % 4)
 	{
 	case 0:
 		return WEAPON_MICRO_UZI;
