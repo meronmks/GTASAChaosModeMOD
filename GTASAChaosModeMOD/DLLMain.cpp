@@ -1,30 +1,30 @@
 ﻿#include <windows.h>
 #include "Actor.h"
+#include <process.h>
 
-BOOL isGameRunning;	//GTASAが起動しているかどうかの判定変数
-
+Actor actors;	//Actor関連
+HANDLE hTh;
 
 //ここにカオス処理メインで呼び出したいものを全部書く
-DWORD WINAPI ScriptMain(void *parameter)
+unsigned __stdcall ScriptMain(LPVOID parameter)
 {
-	Actor actors;	//Actor関連
-	while (isGameRunning)
+	while (1)
 	{
 		actors.ActorArmament();
 		Sleep(500);	//フリーズ回避用
 	}
-	ExitThread(0);	//スレッド終了通知
 }
 
 int WINAPI DllMain(HINSTANCE hInst, DWORD fdReason, PVOID pvReserved)
 {
 	switch (fdReason) {
 	case DLL_PROCESS_ATTACH:
-		isGameRunning = true;
-		CreateThread(0, 0, ScriptMain, 0, 0, 0);
+		hTh = (HANDLE)_beginthreadex(NULL, 0, ScriptMain, NULL, 0, NULL);
 		break;
 	case DLL_PROCESS_DETACH:
-		isGameRunning = false;
+		if (hTh != NULL) {
+			CloseHandle(hTh);
+		}
 		break;
 	default:
 		break;

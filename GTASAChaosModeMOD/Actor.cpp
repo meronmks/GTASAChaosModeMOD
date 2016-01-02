@@ -127,9 +127,8 @@ void Actor::GiveRandomDriveByWeapon(CPed* ped)
 
 void Actor::CurrentWeapon(CPed* ped, eWeaponType weapon)
 {
-	if (!ped->DoWeHaveWeaponAvailable(weapon)) {	//フリーズ回避
-		ped->ClearWeapons();
-		ped->GiveWeapon(weapon, 9999, true);
-		ped->SetCurrentWeapon(weapon);
-	}
+	ped->ClearWeapons();
+	ped->GiveWeapon(weapon, 9999, true);
+	auto weaponID = ped->GetWeaponSlot(weapon);
+	//ped->SetCurrentWeapon(weaponID);
 }
