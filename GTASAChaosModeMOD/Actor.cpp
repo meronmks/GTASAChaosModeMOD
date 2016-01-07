@@ -130,5 +130,6 @@ void Actor::CurrentWeapon(CPed* ped, eWeaponType weapon)
 	ped->ClearWeapons();
 	ped->GiveWeapon(weapon, 9999, true);
 	auto weaponID = ped->GetWeaponSlot(weapon);
-	//ped->SetCurrentWeapon(weaponID);
+	ped->SetCurrentWeapon(weaponID);
+	ped->SetWeaponSkill(weapon, (char)2);
 }
